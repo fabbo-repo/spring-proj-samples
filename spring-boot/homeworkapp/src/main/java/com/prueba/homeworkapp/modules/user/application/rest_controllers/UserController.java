@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.user.application.controllers;
+package com.prueba.homeworkapp.modules.user.application.rest_controllers;
 
 import java.net.URI;
 import java.util.List;

@@ -9,18 +9,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.prueba.homeworkapp.core.domain.exceptions.ToDoException;
-import com.prueba.homeworkapp.modules.task.domain.models.mappers.TaskInDTOToTask;
+import com.prueba.homeworkapp.modules.task.domain.models.mappers.TaskMapper;
 import com.prueba.homeworkapp.modules.task.domain.models.entities.Task;
-import com.prueba.homeworkapp.modules.task.domain.models.entities.TaskStatus;
+import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import com.prueba.homeworkapp.modules.task.infrastructure.jpa_repositories.TaskRepository;
-import com.prueba.homeworkapp.modules.task.domain.models.dtos.TaskInDTO;
+import com.prueba.homeworkapp.modules.task.domain.models.dtos.TaskDto;
 
 @Service
 public class TaskService implements ITaskService {
 	
 	private final TaskRepository taskRepository;
 	
-	private final TaskInDTOToTask mapper;
+	private final TaskMapper mapper;
 	
 	/**
 	 * Dependency injection based on constructor.
@@ -28,14 +28,14 @@ public class TaskService implements ITaskService {
 	 * 
 	 * @param repository
 	 */
-	public TaskService(TaskRepository repository, TaskInDTOToTask mapper) {
+	public TaskService(TaskRepository repository, TaskMapper mapper) {
 		this.taskRepository = repository;
 		this.mapper = mapper;
 	}
 	
 	@Override
-	public Task createTask(TaskInDTO taskInDTO) {
-		Task task = mapper.map(taskInDTO);
+	public Task createTask(TaskDto taskDto) {
+		Task task = mapper.map(taskDto);
 		return this.taskRepository.save(task);
 	}
 	
@@ -54,7 +54,7 @@ public class TaskService implements ITaskService {
 	}
 	
 	@Override
-	public List<Task> findAllByTaskStatus(TaskStatus status) {
+	public List<Task> findAllByTaskStatus(TaskStatusEnum status) {
 		return this.taskRepository.findAllByTaskStatus(status);
 	}
 

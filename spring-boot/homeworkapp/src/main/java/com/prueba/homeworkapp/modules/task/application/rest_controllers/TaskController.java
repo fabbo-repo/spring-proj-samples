@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.task.application.controllers;
+package com.prueba.homeworkapp.modules.task.application.rest_controllers;
 
 import java.util.List;
 
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.prueba.homeworkapp.core.config.SecurityConfig;
 import com.prueba.homeworkapp.modules.task.domain.models.entities.Task;
-import com.prueba.homeworkapp.modules.task.domain.models.entities.TaskStatus;
+import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import com.prueba.homeworkapp.modules.task.domain.sevices.ITaskService;
-import com.prueba.homeworkapp.modules.task.domain.models.dtos.TaskInDTO;
+import com.prueba.homeworkapp.modules.task.domain.models.dtos.TaskDto;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -32,8 +32,8 @@ public class TaskController {
 	}
 	
 	@PostMapping
-	public Task createTask(@RequestBody TaskInDTO taskInDTO) {
-		return this.taskService.createTask(taskInDTO);
+	public Task createTask(@RequestBody TaskDto taskDto) {
+		return this.taskService.createTask(taskDto);
 	}
 
 	@GetMapping("/{id}")
@@ -53,7 +53,7 @@ public class TaskController {
 	}
 	
 	@GetMapping("/status/{status}")
-	public List<Task> findAllByTaskStatus(@PathVariable("status") TaskStatus status) {
+	public List<Task> findAllByTaskStatus(@PathVariable("status") TaskStatusEnum status) {
 		return this.taskService.findAllByTaskStatus(status);
 	}
 	

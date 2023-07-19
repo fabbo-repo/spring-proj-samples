@@ -8,11 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.prueba.homeworkapp.modules.task.domain.models.entities.Task;
-import com.prueba.homeworkapp.modules.task.domain.models.entities.TaskStatus;
+import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 
 public interface TaskRepository extends JpaRepository<Task, Long>{
 	
-	List<Task> findAllByTaskStatus(TaskStatus taskStatus);
+	List<Task> findAllByTaskStatus(TaskStatusEnum taskStatusEnum);
 	
 	/**
 	 * Execute native query in spring 
