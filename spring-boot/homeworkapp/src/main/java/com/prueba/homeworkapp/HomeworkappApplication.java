@@ -8,11 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.prueba.homeworkapp.persistence.entity.Role;
-import com.prueba.homeworkapp.persistence.entity.User;
-import com.prueba.homeworkapp.service.IUserService;
+import com.prueba.homeworkapp.modules.user.domain.models.entities.Role;
+import com.prueba.homeworkapp.modules.user.domain.models.entities.User;
+import com.prueba.homeworkapp.modules.user.domain.services.IUserService;
 
 
 @SpringBootApplication
@@ -50,5 +49,4 @@ public class HomeworkappApplication {
 			userService.addRoleToUser("arnold", "ROLE_USER");
 		};
 	}
-
 }
