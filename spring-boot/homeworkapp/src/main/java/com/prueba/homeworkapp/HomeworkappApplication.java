@@ -1,52 +1,16 @@
 package com.prueba.homeworkapp;
 
-import java.util.ArrayList;
-
-import org.springframework.boot.CommandLineRunner;
+import com.prueba.homeworkapp.core.config.EntityAuditor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.prueba.homeworkapp.modules.user.domain.models.entities.Role;
-import com.prueba.homeworkapp.modules.user.domain.models.entities.User;
-import com.prueba.homeworkapp.modules.user.domain.services.IUserService;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 
 @SpringBootApplication
+@EnableJpaAuditing(auditorAwareRef = EntityAuditor.AUDITOR_BEAN_NAME)
 public class HomeworkappApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(HomeworkappApplication.class, args);
-	}
-	
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	
-	@Bean
-	CommandLineRunner run(IUserService userService) {
-		return args -> {
-			// ID is going to be filled automatically
-			userService.saveRole(new Role(null, "ROLE_USER"));
-			userService.saveRole(new Role(null, "ROLE_MANAGER"));
-			userService.saveRole(new Role(null, "ROLE_ADMIN"));
-			userService.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
-			
-			userService.saveUser(new User(null, "John Travolta", "john", "1234", new ArrayList<>()));
-			userService.saveUser(new User(null, "Will Smith", "will", "1234", new ArrayList<>()));
-			userService.saveUser(new User(null, "Jim Carry", "jim", "1234", new ArrayList<>()));
-			userService.saveUser(new User(null, "Arnold Schwarzenegger", "arnold", "1234", new ArrayList<>()));
-			
-			userService.addRoleToUser("john", "ROLE_USER");
-			userService.addRoleToUser("john", "ROLE_MANAGER");
-			userService.addRoleToUser("will", "ROLE_MANAGER");
-			userService.addRoleToUser("jim", "ROLE_ADMIN");
-			userService.addRoleToUser("arnold", "ROLE_SUPER_ADMIN");
-			userService.addRoleToUser("arnold", "ROLE_ADMIN");
-			userService.addRoleToUser("arnold", "ROLE_USER");
-		};
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(HomeworkappApplication.class, args);
+    }
 }

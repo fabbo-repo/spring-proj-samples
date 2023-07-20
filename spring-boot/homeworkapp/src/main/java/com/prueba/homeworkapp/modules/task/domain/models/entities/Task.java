@@ -13,6 +13,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -59,11 +63,19 @@ public class Task {
     @Column(name = TASK_STATUS_COL)
     private TaskStatusEnum taskStatusEnum;
 
-    private String createdBy;
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt; // audit field
 
-    private LocalDateTime createdAt;
+    @CreatedBy
+    @Column(updatable = false)
+    private String createdBy; // audit field
 
-    private String updatedBy;
+    @LastModifiedDate
+    @Column(insertable = false)
+    private LocalDateTime updatedAt; // audit field
 
-    private LocalDateTime updatedAt;
+    @LastModifiedBy
+    @Column(insertable = false)
+    private String updatedBy; // audit field
 }

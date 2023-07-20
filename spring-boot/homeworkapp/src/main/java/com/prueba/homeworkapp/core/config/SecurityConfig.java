@@ -1,87 +1,111 @@
 package com.prueba.homeworkapp.core.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.prueba.homeworkapp.auth.filter.JwtAuthorizationFilter;
-import lombok.RequiredArgsConstructor;
-import static io.swagger.v3.oas.annotations.enums.SecuritySchemeIn.HEADER;
-import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
-@SecurityScheme(name = SecurityConfig.SECURITY_CONFIG_NAME, in = HEADER, type = HTTP, scheme = "bearer", bearerFormat = "JWT")
-public class SecurityConfig extends  WebSecurityConfigurerAdapter {
-	
-	public static final String SECURITY_CONFIG_NAME = "App Bearer token";
-	
-	private final UserDetailsService userDetailsService;
-	
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-	}
-	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		// Session authentication by cookies will be disabled
-		http.csrf().disable();
-		// To disable default login endpoint
-		http.httpBasic().disable();
-		// Needed for H2 page
-		http.headers().frameOptions().disable();
-		http.exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
-		//JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManagerBean());
-		//jwtAuthenticationFilter.setFilterProcessesUrl("/api/jwt");
-		
-		// Authorization instruction's order matters
+public class SecurityConfig {
+    //@Value("${auth.audience}")
+    //private String audience;
 
-		// Allow any request to JWT token
-		http.authorizeRequests().antMatchers(
-			"/api/login/**",
-			"/api/jwt/**",
-			"/api/jwt/refresh/**",
-			// Swagger:
-			"/v3/api-docs/**",
-			"/swagger-ui.html",
-			"/swagger-ui/**",
-			"/v3/api-docs/**"
-		).permitAll();
-		// Allow any request to user URL only to role user
-		http.authorizeRequests().antMatchers("/api/user/**").hasAnyAuthority("ROLE_USER");
-		// Allow any request to user save URL only to role admin
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
-		// Allow only authenticated users to api requests
-		http.authorizeRequests().antMatchers("/api/**").authenticated();
-		// Allow only authenticated users to other requests
-		//http.authorizeRequests().anyRequest().authenticated();
-		
-		// Authentication Filter
-		// http.addFilter(jwtAuthenticationFilter);
-		// Authorization Filter
-		http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-	}
-	
-	@Bean
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManager();
-	}
+    @Value("${oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuer;
+
+    @Value("${cors.allowed-origins}")
+    private String corsAllowedOrigins;
+
+    @Value("${websecurity.debug:false}")
+    boolean webSecurityDebug;
+
+
+    @Bean
+    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+        http
+                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
+                .cors(withDefaults()) // by default a bean with "corsConfigurationSource" as name will be used
+                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
+                                               authorizationManagerRequestMatcherRegistry
+                                                       .requestMatchers("/api/public").permitAll()
+                                                       .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer ->
+                                              httpSecurityOAuth2ResourceServerConfigurer
+                                                      .jwt(jwtConfigurer ->
+                                                                   jwtConfigurer
+                                                                           .decoder(jwtDecoder())
+                                                                           .jwtAuthenticationConverter(
+                                                                                   jwtAuthenticationConverter())
+                                                      )
+                );
+        return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(Arrays.asList(corsAllowedOrigins.split(",")));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        corsConfiguration.setExposedHeaders(List.of("X-Get-Header"));
+        corsConfiguration.setMaxAge(3600L);
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
+    }
+
+    @Bean
+    JwtDecoder jwtDecoder() {
+        final NimbusJwtDecoder jwtDecoder = JwtDecoders.fromOidcIssuerLocation(issuer);
+
+        final OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator();
+        final OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
+        final OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(
+                withIssuer,
+                audienceValidator
+        );
+
+        jwtDecoder.setJwtValidator(withAudience);
+
+        return jwtDecoder;
+    }
+
+    @Bean
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
+        final JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
+        converter.setAuthoritiesClaimName("https://example_yt/roles");
+        converter.setAuthorityPrefix("");
+
+        final JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
+        jwtConverter.setJwtGrantedAuthoritiesConverter(converter);
+        return jwtConverter;
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.debug(webSecurityDebug);
+    }
 }

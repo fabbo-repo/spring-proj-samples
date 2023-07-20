@@ -1,25 +1,21 @@
 package com.prueba.homeworkapp.modules.task.domain.models.mappers;
 
-import java.time.LocalDateTime;
-
-import org.springframework.stereotype.Component;
-
-import com.prueba.homeworkapp.modules.task.domain.models.entities.Task;
-import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import com.prueba.homeworkapp.modules.task.domain.models.dtos.TaskDto;
+import com.prueba.homeworkapp.modules.task.domain.models.entities.Task;
+import com.prueba.homeworkapp.modules.task.domain.models.requests.TaskRequest;
+import com.prueba.homeworkapp.modules.task.domain.models.responses.TaskResponse;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-@Component
-public class TaskMapper implements IMapper<TaskDto, Task>{
+@Mapper
+public interface TaskMapper {
+    TaskMapper INSTANCE = Mappers.getMapper(TaskMapper.class);
 
-	@Override
-	public Task map(TaskDto in) {
-		Task task = new Task();
-		task.setTitle(in.getTitle());
-		task.setDescription(in.getDescription());
-		task.setEta(in.getEta());
-		task.setCreatedDate(LocalDateTime.now());
-		task.setFinished(false);
-		task.setTaskStatusEnum(TaskStatusEnum.ON_TIME);
-		return task;
-	}
+    TaskDto requestToDto(final TaskRequest taskRequest);
+
+    Task requestToEntity(final TaskRequest taskRequest);
+
+    Task dtoToEntity(final TaskDto taskDto);
+
+    TaskResponse entityToResponse(final Task task);
 }

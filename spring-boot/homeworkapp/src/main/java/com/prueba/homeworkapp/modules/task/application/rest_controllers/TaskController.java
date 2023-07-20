@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.prueba.homeworkapp.core.config.SecurityConfig;
 import com.prueba.homeworkapp.modules.task.domain.models.entities.Task;
 import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
-import com.prueba.homeworkapp.modules.task.domain.sevices.ITaskService;
+import com.prueba.homeworkapp.modules.task.domain.sevices.TaskService;
 import com.prueba.homeworkapp.modules.task.domain.models.dtos.TaskDto;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,9 +25,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @SecurityRequirement(name = SecurityConfig.SECURITY_CONFIG_NAME)
 public class TaskController {
 	
-	private final ITaskService taskService;
+	private final TaskService taskService;
 	
-	public TaskController(ITaskService taskService) {
+	public TaskController(TaskService taskService) {
 		this.taskService = taskService;
 	}
 	
