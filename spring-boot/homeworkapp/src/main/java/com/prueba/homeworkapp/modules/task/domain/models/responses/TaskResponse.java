@@ -14,6 +14,6 @@ public record TaskResponse(
         LocalDateTime estimatedDoneAt,
         LocalDateTime finishedAt,
         boolean finished,
-        TaskStatusEnum taskStatusEnum
+        TaskStatusEnum taskStatus
 ) {
 }

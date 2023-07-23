@@ -3,6 +3,8 @@ package com.prueba.homeworkapp.modules.task.domain.models.entities;
 import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,8 +12,10 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -23,20 +27,29 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity
 @Table(name = Task.TABLE_NAME)
 public class Task {
     public final static String TABLE_NAME = "task";
+    public final static String SORT_FIELD = "createdAt";
+    public final static String ID_COL = "id";
     private final static String TITLE_COL = "title";
     private final static String DESCRIPTION_COL = "description";
     private final static String ESTIMATED_DONE_AT_COL = "estimated_done_date";
     private final static String FINISHED_AT_COL = "finished_date";
     private final static String FINISHED_COL = "is_finished";
     private final static String TASK_STATUS_COL = "task_status";
+    public final static String CREATED_AT_COL = "created_at";
+    private final static String CREATED_BY_COL = "created_by";
+    private final static String UPDATED_AT_COL = "updated_at";
+    private final static String UPDATED_BY_COL = "updated_by";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = ID_COL)
     private UUID id;
 
     @NotBlank
@@ -61,21 +74,22 @@ public class Task {
 
     @NotNull
     @Column(name = TASK_STATUS_COL)
-    private TaskStatusEnum taskStatusEnum;
+    @Enumerated(EnumType.STRING)
+    private TaskStatusEnum taskStatus;
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(name = CREATED_AT_COL, updatable = false)
     private LocalDateTime createdAt; // audit field
 
     @CreatedBy
-    @Column(updatable = false)
+    @Column(name = CREATED_BY_COL, updatable = false)
     private String createdBy; // audit field
 
     @LastModifiedDate
-    @Column(insertable = false)
+    @Column(name = UPDATED_AT_COL, insertable = false)
     private LocalDateTime updatedAt; // audit field
 
     @LastModifiedBy
-    @Column(insertable = false)
+    @Column(name = UPDATED_BY_COL, insertable = false)
     private String updatedBy; // audit field
 }

@@ -1,19 +1,23 @@
 package com.prueba.homeworkapp.modules.task.domain.sevices;
 
-import com.prueba.homeworkapp.core.domain.exceptions.ToDoException;
+import com.prueba.homeworkapp.core.domain.exceptions.EntityNotFoundException;
+import com.prueba.homeworkapp.core.domain.exceptions.PageNotFoundException;
+import com.prueba.homeworkapp.core.domain.mapper.PageMapper;
+import com.prueba.homeworkapp.core.domain.responses.PageResponse;
 import com.prueba.homeworkapp.modules.task.domain.models.entities.Task;
 import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
+import com.prueba.homeworkapp.modules.task.domain.models.exceptions.TaskAlreadyFinishedException;
 import com.prueba.homeworkapp.modules.task.domain.models.mappers.TaskMapper;
 import com.prueba.homeworkapp.modules.task.domain.models.requests.TaskRequest;
 import com.prueba.homeworkapp.modules.task.domain.models.responses.TaskResponse;
+import com.prueba.homeworkapp.modules.task.domain.models.views.TaskFinishedView;
 import com.prueba.homeworkapp.modules.task.domain.repositories.TaskRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -22,48 +26,91 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 
+    private final TaskMapper taskMapper = TaskMapper.INSTANCE;
+
+    private final PageMapper pageMapper = PageMapper.INSTANCE;
+
     @Override
-    public TaskResponse createTask(TaskRequest request) {
-        final TaskMapper mapper = TaskMapper.INSTANCE;
-        final Task createdTask = taskRepository.save(mapper.requestToEntity(request));
-        return mapper.entityToResponse(createdTask);
+    public TaskResponse createTask(final TaskRequest request) {
+        final Task createdTask = taskRepository.save(
+                taskMapper.requestToEntity(request)
+        );
+        return taskMapper.entityToResponse(createdTask);
     }
 
     @Override
-    public Task findById(Long id) {
-        Optional<Task> optionalTask = this.taskJpaRepository.findById(id);
-        if (optionalTask.isEmpty()) {
-            throw new ToDoException("Task not found", HttpStatus.NOT_FOUND);
+    public TaskResponse getTask(final UUID id) {
+        final Task task = taskRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                Task.TABLE_NAME,
+                                Task.ID_COL,
+                                id
+                        )
+                );
+        return taskMapper.entityToResponse(task);
+    }
+
+    @Override
+    public PageResponse<TaskResponse> getTasks(final int pageNum) {
+        final Page<TaskResponse> page = taskRepository
+                .findAll(pageNum)
+                .map(taskMapper::entityToResponse);
+        return checkAndMapPage(page, pageNum);
+    }
+
+    @Override
+    public PageResponse<TaskResponse> getTasksByTaskStatus(final TaskStatusEnum status, final int pageNum) {
+        final Page<TaskResponse> page = taskRepository
+                .findAllByTaskStatus(status, pageNum)
+                .map(taskMapper::entityToResponse);
+        return checkAndMapPage(page, pageNum);
+    }
+
+    @Override
+    public void deleteTask(final UUID id) {
+        checkTaskExists(id);
+        taskRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateTaskAsFinished(final UUID id) {
+        final TaskFinishedView taskFinishedView = taskRepository
+                .findFinishedViewById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                Task.TABLE_NAME,
+                                Task.ID_COL,
+                                id
+                        )
+                );
+        if (taskFinishedView.getFinished()) {
+            throw new TaskAlreadyFinishedException(
+                    Task.ID_COL,
+                    id
+            );
         }
-        return optionalTask.get();
+        taskRepository.saveTaskAsFinished(id);
     }
 
-    @Override
-    public List<Task> findAll() {
-        return this.taskJpaRepository.findAll();
-    }
-
-    @Override
-    public List<Task> findAllByTaskStatus(TaskStatusEnum status) {
-        return this.taskJpaRepository.findAllByTaskStatus(status);
-    }
-
-    @Override
-    @Transactional
-    public void updateTaskAsFinished(Long id) {
-        Optional<Task> optionalTask = this.taskJpaRepository.findById(id);
-        if (optionalTask.isEmpty()) {
-            throw new ToDoException("Task not found", HttpStatus.NOT_FOUND);
+    private void checkTaskExists(final UUID id) {
+        if (!taskRepository.existsById(id)) {
+            throw new EntityNotFoundException(
+                    Task.TABLE_NAME,
+                    Task.ID_COL,
+                    id
+            );
         }
-        this.taskJpaRepository.markTaskAsFinished(id);
     }
 
-    @Override
-    public void deleteById(Long id) {
-        Optional<Task> optionalTask = this.taskJpaRepository.findById(id);
-        if (optionalTask.isEmpty()) {
-            throw new ToDoException("Task not found", HttpStatus.NOT_FOUND);
+    private PageResponse<TaskResponse> checkAndMapPage(final Page<TaskResponse> page, final int pageNum) {
+        if (page.getTotalPages() < pageNum) {
+            throw new PageNotFoundException(
+                    pageNum,
+                    Task.TABLE_NAME
+            );
         }
-        this.taskJpaRepository.deleteById(id);
+        return pageMapper.taskPageToResponse(page);
     }
 }

@@ -1,22 +1,23 @@
 package com.prueba.homeworkapp.modules.task.domain.sevices;
 
+import com.prueba.homeworkapp.core.domain.responses.PageResponse;
 import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import com.prueba.homeworkapp.modules.task.domain.models.requests.TaskRequest;
 import com.prueba.homeworkapp.modules.task.domain.models.responses.TaskResponse;
 
-import java.util.List;
+import java.util.UUID;
 
 public interface TaskService {
 
     TaskResponse createTask(final TaskRequest request);
 
-    TaskResponse findById(final Long id);
+    TaskResponse getTask(final UUID id);
 
-    List<TaskResponse> findAll();
+    PageResponse<TaskResponse> getTasks(final int pageNum);
 
-    List<TaskResponse> findAllByTaskStatus(final TaskStatusEnum status);
+    PageResponse<TaskResponse> getTasksByTaskStatus(final TaskStatusEnum taskStatus, final int pageNum);
 
-    void updateTaskAsFinished(final Long id);
+    void deleteTask(final UUID id);
 
-    void deleteById(final Long id);
+    void updateTaskAsFinished(final UUID id);
 }

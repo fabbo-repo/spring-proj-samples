@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Builder
 public record TaskRequest(
@@ -22,6 +21,6 @@ public record TaskRequest(
         LocalDateTime finishedAt,
         boolean finished,
         @NotNull
-        TaskStatusEnum taskStatusEnum
+        TaskStatusEnum taskStatus
 ) {
 }

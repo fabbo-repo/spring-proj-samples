@@ -12,11 +12,10 @@ import com.prueba.homeworkapp.modules.user.infrastructure.jpa_repositories.RoleR
 import com.prueba.homeworkapp.auth.domain.models.dtos.RegisterDTO;
 
 @Component
-public class RegisterDTOToUser implements IMapper<RegisterDTO, User>{
+public class RegisterDTOToUser {
 	@Autowired
 	RoleRepo roleRepo;
-	
-	@Override
+
 	public User map(RegisterDTO in) {
 		User user = new User();
 		user.setName(in.getName());

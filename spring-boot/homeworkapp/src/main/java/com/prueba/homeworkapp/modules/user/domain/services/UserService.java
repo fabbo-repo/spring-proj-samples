@@ -1,24 +1,23 @@
 package com.prueba.homeworkapp.modules.user.domain.services;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import javax.transaction.Transactional;
-
+import com.prueba.homeworkapp.auth.domain.models.dtos.RegisterDTO;
 import com.prueba.homeworkapp.auth.domain.models.mappers.RegisterDTOToUser;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.Role;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.User;
 import com.prueba.homeworkapp.modules.user.infrastructure.jpa_repositories.RoleRepo;
 import com.prueba.homeworkapp.modules.user.infrastructure.jpa_repositories.UserRepo;
-import com.prueba.homeworkapp.auth.domain.models.dtos.RegisterDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,15 +37,11 @@ public class UserService implements IUserService, UserDetailsService {
 	 */
 	private final RoleRepo roleRepo;
 	
-	private final PasswordEncoder passwordEncoder;
-	
 	private final RegisterDTOToUser mapper;
 
 	@Override
 	public User saveUser(User user) {
 		log.info("Saving new user {} to the database", user.getUsername());
-		// Password is hashed before it is saved in database
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepo.save(user);
 	}
 
