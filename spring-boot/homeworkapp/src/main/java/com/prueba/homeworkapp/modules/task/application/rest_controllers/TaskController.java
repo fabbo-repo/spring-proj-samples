@@ -32,40 +32,40 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    @PostMapping
-    public TaskResponse createTask(@RequestBody @Valid final TaskRequest request) {
-        return this.taskService.createTask(request);
-    }
-
     @GetMapping("/{id}")
     public TaskResponse getTask(@PathVariable final UUID id) {
-        return this.taskService.getTask(id);
+        return taskService.getTask(id);
     }
 
     @GetMapping
     public PageResponse<TaskResponse> getTasks(
-            @RequestParam @Min(0) final int page
+            @RequestParam(defaultValue = "0") @Min(0) final Integer page
     ) {
-        return this.taskService.getTasks(page);
+        return taskService.getTasks(page);
     }
 
     @GetMapping("/status/{status}")
     public PageResponse<TaskResponse> getTasksByTaskStatus(
             @PathVariable final TaskStatusEnum status,
-            @RequestParam @Min(0) final int page
+            @RequestParam(defaultValue = "0") @Min(0) final Integer page
     ) {
-        return this.taskService.getTasksByTaskStatus(status, page);
+        return taskService.getTasksByTaskStatus(status, page);
+    }
+
+    @PostMapping
+    public TaskResponse createTask(@RequestBody @Valid final TaskRequest request) {
+        return taskService.createTask(request);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable final UUID id) {
-        this.taskService.deleteTask(id);
+        taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/mark-as-finished/{id}")
     public ResponseEntity<Void> updateTaskAsFinished(@PathVariable final UUID id) {
-        this.taskService.updateTaskAsFinished(id);
+        taskService.updateTaskAsFinished(id);
         return ResponseEntity.noContent().build();
     }
 }

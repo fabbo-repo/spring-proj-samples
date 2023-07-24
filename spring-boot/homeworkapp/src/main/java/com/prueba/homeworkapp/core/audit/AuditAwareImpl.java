@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Component(AuditAwareImpl.AUDITOR_BEAN_NAME)
 public class AuditAwareImpl implements AuditorAware<String> {
-    public static final String AUDITOR_BEAN_NAME = "auditAwareImpl";
+    public static final String AUDITOR_BEAN_NAME = "auditorBean";
 
     @Override
     @NonNull

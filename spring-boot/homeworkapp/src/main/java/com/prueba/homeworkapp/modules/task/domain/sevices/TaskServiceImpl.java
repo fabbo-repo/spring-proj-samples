@@ -28,7 +28,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskMapper taskMapper = TaskMapper.INSTANCE;
 
-    private final PageMapper pageMapper = PageMapper.INSTANCE;
+    private final PageMapper<TaskResponse> pageMapper = new PageMapper<>();
 
     @Override
     public TaskResponse createTask(final TaskRequest request) {
