@@ -17,9 +17,17 @@ spring:
                 format_sql: true
     profiles:
         active: test
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:39080/realms/homeworkapp}
+                    jwk-set-uri: ${KEYCLOAK_JWKS_URI:http://localhost:39080/realms/homeworkapp/protocol/openid-connect/certs}
 
 server:
     port: 8080
+    servlet:
+        context-path: /api/v1
 
 api:
     pagination:
