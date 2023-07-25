@@ -2,82 +2,105 @@ package com.prueba.homeworkapp.modules.user.infrastructure.clients.keycloak;
 
 import com.prueba.homeworkapp.core.config.KeycloakProvider;
 import com.prueba.homeworkapp.modules.user.domain.models.exceptions.CannotCreateUserException;
+import com.prueba.homeworkapp.modules.user.domain.models.exceptions.CannotDeleteUserException;
 import com.prueba.homeworkapp.modules.user.domain.models.exceptions.UserAlreadyExistsException;
-import com.prueba.homeworkapp.modules.user.domain.models.requests.UserRequest;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.CreatedResponseUtil;
-import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.representations.idm.UserSessionRepresentation;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class KeycloakAdminClient {
-    private static final boolean USER_ENABLED = true;
-    private static final boolean USER_EMAIL_VERIFIED = true;
-    private static final String USER_CREDENTIALS_TYPE = "password";
-    private static final boolean USER_CREDENTIALS_TEMPORARY = false;
-    private static final String USER_REQUIRED_ACTION = "UPDATE_PASSWORD";
-    private static final int USER_UPDATE_PASSWORD_TOKEN_LIFESPAN = 86400;
-    private static final String DEFAULT_ROLES_PREFIX = "default-roles-";
 
     private final KeycloakProvider keycloakProvider;
 
-    // TODO get user data
+    public UserRepresentation getUser(final UUID userId) {
+        log.info("Getting data for user {} in Keycloak realm {}",
+                 userId, keycloakProvider.getRealm()
+        );
 
-    // TODO get sessions
+        final UsersResource usersResource = keycloakProvider.getUsersResource();
+        final UserResource userResource = usersResource.get(userId.toString());
+        return userResource.toRepresentation();
+    }
 
-    public UUID createUser(final UserRequest request) {
-        final Keycloak keycloak = keycloakProvider.getInstance();
+    public List<UserSessionRepresentation> getSessions(final UUID userId) {
+        log.info("Getting data for user {} in Keycloak realm {}",
+                 userId, keycloakProvider.getRealm()
+        );
 
-        log.info("Creating user {} in Keycloak realm {}", request.username(), keycloakProvider.getRealm());
+        final UsersResource usersResource = keycloakProvider.getUsersResource();
+        final UserResource userResource = usersResource.get(userId.toString());
+        return userResource.getUserSessions();
+    }
 
-        final UserRepresentation user = new UserRepresentation();
-        user.setUsername(request.username());
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
-        user.setEmail(request.email());
-        user.setEmailVerified(USER_EMAIL_VERIFIED);
-        user.setEnabled(USER_ENABLED);
+    public UUID createUser(final UserRepresentation user) {
+        log.info("Creating user {} in Keycloak realm {}",
+                 user.getUsername(), keycloakProvider.getRealm()
+        );
 
-        final CredentialRepresentation credentials = new CredentialRepresentation();
-        credentials.setTemporary(USER_CREDENTIALS_TEMPORARY);
-        credentials.setType(USER_CREDENTIALS_TYPE);
-        credentials.setValue(request.password());
-
-        user.setCredentials(Collections.singletonList(credentials));
-
-        final UsersResource realmUsers = keycloak.realm(keycloakProvider.getRealm()).users();
-
-        final Response response = realmUsers.create(user);
-
+        final UsersResource usersResource = keycloakProvider.getUsersResource();
+        final Response response = usersResource.create(user);
         final Response.StatusType responseStatusInfo = response.getStatusInfo();
 
         if (Response.Status.CONFLICT.equals(responseStatusInfo)) {
-            log.info("User {} already exists", request.email());
-            throw new UserAlreadyExistsException(request.email());
+            throw new UserAlreadyExistsException(user.getEmail());
         } else if (!Response.Status.CREATED.equals(responseStatusInfo)) {
-            log.warn("Unexpected result while trying to create user: {}, status: {}, reason: {}",
-                     request.email(), responseStatusInfo.getStatusCode(), responseStatusInfo.getReasonPhrase()
+            log.warn(
+                    "Unexpected result while trying to create user: {}, status: {}, reason: {}",
+                    user.getEmail(),
+                    responseStatusInfo.getStatusCode(),
+                    responseStatusInfo.getReasonPhrase()
             );
-            throw new CannotCreateUserException(request.email());
+            throw new CannotCreateUserException(user.getEmail());
         }
 
         final String userId = CreatedResponseUtil.getCreatedId(response);
+        log.info("User {} created with id {}", user.getEmail(), userId);
 
-        log.info("User {} created with id {}", request.email(), userId);
         return UUID.fromString(userId);
     }
 
-    // TODO update user
+    public void updateUser(
+            final UserRepresentation userRepresentation
+    ) {
+        final UUID userId = UUID.fromString(userRepresentation.getId());
+        log.info("Updating user {} in Keycloak realm {}",
+                 userId, keycloakProvider.getRealm()
+        );
+        final UsersResource usersResource = keycloakProvider.getUsersResource();
+        final UserResource userResource = usersResource.get(userId.toString());
+        userResource.update(userRepresentation);
+    }
 
-    // TODO delete user
+    public void deleteUser(
+            final UUID userId
+    ) {
+        log.info("Deleting user {} in Keycloak realm {}",
+                 userId, keycloakProvider.getRealm()
+        );
+        final UsersResource usersResource = keycloakProvider.getUsersResource();
+        final Response response = usersResource.delete(userId.toString());
+        final Response.StatusType responseStatusInfo = response.getStatusInfo();
+
+        if (!Response.Status.NO_CONTENT.equals(responseStatusInfo)) {
+            log.warn(
+                    "Unexpected result while trying to delete user: {}, status: {}, reason: {}",
+                    userId,
+                    responseStatusInfo.getStatusCode(),
+                    responseStatusInfo.getReasonPhrase()
+            );
+            throw new CannotDeleteUserException(userId);
+        }
+    }
 }
