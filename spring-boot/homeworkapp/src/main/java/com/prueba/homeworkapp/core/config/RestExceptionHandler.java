@@ -1,9 +1,9 @@
 package com.prueba.homeworkapp.core.config;
 
-import com.prueba.homeworkapp.core.domain.exceptions.EntityNotFoundException;
-import com.prueba.homeworkapp.core.domain.exceptions.PageNotFoundException;
-import com.prueba.homeworkapp.core.domain.responses.ApiErrorResponse;
-import com.prueba.homeworkapp.core.domain.responses.ParamErrorResponse;
+import com.prueba.homeworkapp.core.models.exceptions.EntityNotFoundException;
+import com.prueba.homeworkapp.core.models.exceptions.PageNotFoundException;
+import com.prueba.homeworkapp.core.models.responses.ApiErrorResponse;
+import com.prueba.homeworkapp.core.models.responses.ParamErrorResponse;
 import com.prueba.homeworkapp.modules.task.domain.models.exceptions.TaskAlreadyFinishedException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

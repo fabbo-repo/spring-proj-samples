@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-public class TaskDto {
+public class Task {
 	private UUID id;
 
 	private String title;

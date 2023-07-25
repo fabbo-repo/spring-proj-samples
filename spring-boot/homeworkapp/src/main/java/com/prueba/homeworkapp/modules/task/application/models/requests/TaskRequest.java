@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.task.domain.models.requests;
+package com.prueba.homeworkapp.modules.task.application.models.requests;
 
 import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import jakarta.validation.constraints.NotBlank;

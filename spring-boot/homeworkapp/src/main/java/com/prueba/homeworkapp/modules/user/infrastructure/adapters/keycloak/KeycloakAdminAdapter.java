@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.user.infrastructure.clients.keycloak;
+package com.prueba.homeworkapp.modules.user.infrastructure.adapters.keycloak;
 
 import com.prueba.homeworkapp.core.config.KeycloakProvider;
 import com.prueba.homeworkapp.modules.user.domain.models.exceptions.CannotCreateUserException;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class KeycloakAdminClient {
+public class KeycloakAdminAdapter {
 
     private final KeycloakProvider keycloakProvider;
 

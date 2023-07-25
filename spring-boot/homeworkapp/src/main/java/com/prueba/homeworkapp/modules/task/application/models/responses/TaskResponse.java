@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.task.domain.models.responses;
+package com.prueba.homeworkapp.modules.task.application.models.responses;
 
 import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import lombok.Builder;

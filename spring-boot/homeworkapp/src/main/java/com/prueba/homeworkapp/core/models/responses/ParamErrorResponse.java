@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.core.domain.responses;
+package com.prueba.homeworkapp.core.models.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

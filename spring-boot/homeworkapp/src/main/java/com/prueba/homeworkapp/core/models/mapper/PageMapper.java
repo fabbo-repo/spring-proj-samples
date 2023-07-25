@@ -1,13 +1,21 @@
-package com.prueba.homeworkapp.core.domain.mapper;
+package com.prueba.homeworkapp.core.models.mapper;
 
-import com.prueba.homeworkapp.core.domain.responses.PageResponse;
+import com.prueba.homeworkapp.core.models.dtos.PageDto;
+import com.prueba.homeworkapp.core.models.exceptions.PageNotFoundException;
+import com.prueba.homeworkapp.modules.task.infrastructure.models.entities.TaskJpaEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 public class PageMapper<T> {
 
-    public PageResponse<T> taskPageToResponse(final Page<T> page) {
-        return new PageResponse<>(
+    public PageDto<T> enityToDto(final Page<T> page) {
+        if (page.getTotalPages() < page.getNumber()) {
+            throw new PageNotFoundException(
+                    page.getNumber(),
+                    TaskJpaEntity.TABLE_NAME
+            );
+        }
+        return new PageDto<>(
                 page.getTotalElements(),
                 pageToNext(page),
                 pageToPrev(page),

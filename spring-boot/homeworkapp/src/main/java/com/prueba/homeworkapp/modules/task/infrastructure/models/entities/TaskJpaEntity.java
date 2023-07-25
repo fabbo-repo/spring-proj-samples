@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.task.domain.models.entities;
+package com.prueba.homeworkapp.modules.task.infrastructure.models.entities;
 
 import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import jakarta.persistence.Column;
@@ -34,8 +34,8 @@ import java.util.UUID;
 @Builder
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = Task.TABLE_NAME)
-public class Task {
+@Table(name = TaskJpaEntity.TABLE_NAME)
+public class TaskJpaEntity {
     public final static String TABLE_NAME = "task";
     public final static String SORT_FIELD = "createdAt";
     public final static String ID_COL = "id";

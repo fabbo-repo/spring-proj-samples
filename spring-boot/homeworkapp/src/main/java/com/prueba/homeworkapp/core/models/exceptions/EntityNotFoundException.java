@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.core.domain.exceptions;
+package com.prueba.homeworkapp.core.models.exceptions;
 
 public class EntityNotFoundException extends RuntimeException {
     public EntityNotFoundException(final String entityName, final String idName, final Object id) {

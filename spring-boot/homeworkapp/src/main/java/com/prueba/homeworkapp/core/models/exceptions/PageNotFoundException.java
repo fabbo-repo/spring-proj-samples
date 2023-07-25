@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.core.domain.exceptions;
+package com.prueba.homeworkapp.core.models.exceptions;
 
 public class PageNotFoundException extends RuntimeException {
     public PageNotFoundException(final int pageNum, final String idName) {

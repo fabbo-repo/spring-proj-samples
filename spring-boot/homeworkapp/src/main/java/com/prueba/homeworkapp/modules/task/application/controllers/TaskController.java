@@ -1,9 +1,11 @@
-package com.prueba.homeworkapp.modules.task.application.rest_controllers;
+package com.prueba.homeworkapp.modules.task.application.controllers;
 
-import com.prueba.homeworkapp.core.domain.responses.PageResponse;
+import com.prueba.homeworkapp.core.models.dtos.PageDto;
+import com.prueba.homeworkapp.modules.task.application.models.mappers.TaskControllerMapper;
+import com.prueba.homeworkapp.modules.task.application.models.requests.TaskRequest;
+import com.prueba.homeworkapp.modules.task.application.models.responses.TaskResponse;
+import com.prueba.homeworkapp.modules.task.domain.models.dtos.Task;
 import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
-import com.prueba.homeworkapp.modules.task.domain.models.requests.TaskRequest;
-import com.prueba.homeworkapp.modules.task.domain.models.responses.TaskResponse;
 import com.prueba.homeworkapp.modules.task.domain.sevices.TaskService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -32,29 +34,37 @@ public class TaskController {
 
     private final TaskService taskService;
 
+    private final TaskControllerMapper taskMapper = TaskControllerMapper.INSTANCE;
+
     @GetMapping("/{id}")
     public TaskResponse getTask(@PathVariable final UUID id) {
-        return taskService.getTask(id);
+        final Task task = taskService.getTask(id);
+        return taskMapper.dtoToResponse(task);
     }
 
     @GetMapping
-    public PageResponse<TaskResponse> getTasks(
+    public PageDto<TaskResponse> getTasks(
             @RequestParam(defaultValue = "0") @Min(0) final Integer page
     ) {
-        return taskService.getTasks(page);
+        final PageDto<Task> taskPage = taskService.getTasks(page);
+        return taskPage.map(taskMapper::dtoToResponse);
     }
 
     @GetMapping("/status/{status}")
-    public PageResponse<TaskResponse> getTasksByTaskStatus(
+    public PageDto<TaskResponse> getTasksByTaskStatus(
             @PathVariable final TaskStatusEnum status,
             @RequestParam(defaultValue = "0") @Min(0) final Integer page
     ) {
-        return taskService.getTasksByTaskStatus(status, page);
+        final PageDto<Task> taskPage = taskService.getTasksByTaskStatus(status, page);
+        return taskPage.map(taskMapper::dtoToResponse);
     }
 
     @PostMapping
     public TaskResponse createTask(@RequestBody @Valid final TaskRequest request) {
-        return taskService.createTask(request);
+        final Task task = taskMapper.requestToDto(request);
+        return taskMapper.dtoToResponse(
+                taskService.createTask(task)
+        );
     }
 
     @DeleteMapping("/{id}")
