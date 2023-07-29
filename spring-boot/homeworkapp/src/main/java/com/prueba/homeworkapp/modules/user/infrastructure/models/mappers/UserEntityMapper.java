@@ -10,7 +10,6 @@ import org.mapstruct.factory.Mappers;
 public interface UserEntityMapper {
     UserEntityMapper INSTANCE = Mappers.getMapper(UserEntityMapper.class);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)

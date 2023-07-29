@@ -1,5 +1,7 @@
 package com.prueba.homeworkapp.modules.auth.infrastructure.clients.keycloak;
 
+import com.nimbusds.jose.shaded.gson.JsonObject;
+import com.nimbusds.jose.shaded.gson.JsonParser;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
@@ -154,6 +157,14 @@ public class KeycloakClient implements AuthClient {
             );
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public JsonObject decodeToken(final String token) {
+        final String[] chunks = token.split("\\.");
+        final Base64.Decoder decoder = Base64.getUrlDecoder();
+        final String payload = new String(decoder.decode(chunks[1]));
+        return JsonParser.parseString(payload).getAsJsonObject();
     }
 
     private Jwts tokenToJwts(final TokenResponse tokenResponse) {

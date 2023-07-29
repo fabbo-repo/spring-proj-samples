@@ -59,7 +59,7 @@ public class KeycloakProvider {
     public URI getTokenEndpoint() throws URISyntaxException {
         return new URI(
                 serverUrl
-                        .concat("realms/")
+                        .concat("/realms/")
                         .concat(realm)
                         .concat(TOKEN_ENDPOINT));
     }

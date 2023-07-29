@@ -1,6 +1,5 @@
 package com.prueba.homeworkapp.modules.user.infrastructure.models.entities;
 
-import com.prueba.homeworkapp.modules.task.infrastructure.models.entities.TaskJpaEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -32,7 +31,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = TaskJpaEntity.TABLE_NAME)
+@Table(name = UserJpaEntity.TABLE_NAME)
 public class UserJpaEntity {
     public final static String TABLE_NAME = "app_user";
     public final static String SORT_FIELD = "createdAt";

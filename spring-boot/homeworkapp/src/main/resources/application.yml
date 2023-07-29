@@ -4,14 +4,14 @@ spring:
     datasource:
         initialization-mode: always
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:31500/postgres
+        url: jdbc:postgresql://localhost:31500/homework_db
         username: pguser
         password: password
     jpa:
         show-sql: true
         generate-ddl: true
         hibernate:
-            ddl-auto: update
+            ddl-auto: create-drop
         properties:
             hibernate:
                 format_sql: true

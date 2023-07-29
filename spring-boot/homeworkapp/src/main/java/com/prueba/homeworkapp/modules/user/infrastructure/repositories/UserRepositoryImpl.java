@@ -35,12 +35,12 @@ public class UserRepositoryImpl implements UserRepository {
     private final PageMapper<User> pageMapper = new PageMapper<>();
 
     @Override
-    public boolean existsById(UUID id) {
+    public boolean existsById(final UUID id) {
         return userJpaRepository.existsById(id);
     }
 
     @Override
-    public User findById(UUID id) {
+    public User findById(final UUID id) {
         final UserJpaEntity userJpaEntity = userJpaRepository
                 .findById(id)
                 .orElseThrow(
@@ -54,7 +54,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public PageDto<User> findAll(int pageNum) {
+    public PageDto<User> findAll(final int pageNum) {
         final Pageable pageable = PageRequest.of(
                 pageNum,
                 pageSize,
@@ -67,12 +67,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(final UUID id) {
         userJpaRepository.deleteById(id);
     }
 
     @Override
-    public User save(User user) {
+    public User save(final User user) {
         final UserJpaEntity userJpaEntity = userMapper.dtoToEntity(user);
         return userMapper.entityToDto(
                 userJpaRepository.save(userJpaEntity)
