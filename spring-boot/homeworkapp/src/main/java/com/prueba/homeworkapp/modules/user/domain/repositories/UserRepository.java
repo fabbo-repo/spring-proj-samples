@@ -1,0 +1,18 @@
+package com.prueba.homeworkapp.modules.user.domain.repositories;
+
+import com.prueba.homeworkapp.core.models.dtos.PageDto;
+import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
+
+import java.util.UUID;
+
+public interface UserRepository {
+    boolean existsById(final UUID id);
+
+    User findById(final UUID id);
+
+    PageDto<User> findAll(final int pageNum);
+
+    void deleteById(final UUID id);
+
+    User save(final User user);
+}

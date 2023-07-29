@@ -4,7 +4,10 @@ import com.prueba.homeworkapp.core.models.exceptions.EntityNotFoundException;
 import com.prueba.homeworkapp.core.models.exceptions.PageNotFoundException;
 import com.prueba.homeworkapp.core.models.responses.ApiErrorResponse;
 import com.prueba.homeworkapp.core.models.responses.ParamErrorResponse;
+import com.prueba.homeworkapp.modules.auth.domain.models.exceptions.UnauthorizedException;
 import com.prueba.homeworkapp.modules.task.domain.models.exceptions.TaskAlreadyFinishedException;
+import com.prueba.homeworkapp.modules.user.domain.models.exceptions.CannotCreateUserException;
+import com.prueba.homeworkapp.modules.user.domain.models.exceptions.CannotDeleteUserException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
@@ -66,10 +69,28 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
+     * Will get invoke when unauthorized exception is thrown.
+     */
+    @ExceptionHandler(
+            {
+                    UnauthorizedException.class
+            }
+    )
+    public ResponseEntity<ApiErrorResponse> handleUnauthorizedException(final UnauthorizedException ex) {
+        final ApiErrorResponse errorResponse = ApiErrorResponse
+                .builder()
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
      * Will get invoke when any API exception is thrown.
      */
     @ExceptionHandler(
             {
+                    CannotCreateUserException.class,
+                    CannotDeleteUserException.class,
                     TaskAlreadyFinishedException.class
             }
     )

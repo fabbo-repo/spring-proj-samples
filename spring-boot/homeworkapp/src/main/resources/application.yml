@@ -37,3 +37,8 @@ api:
         allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PATCH,PUT,DELETE,OPTIONS,HEAD}
         allowed-headers: ${CORS_ALLOWED_HEADERS:Authorization,Content-Type}
         allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
+    keycloak:
+        server-url: ${KEYCLOAK_URL:http://localhost:39080}
+        realm: ${KEYCLOAK_REALM:homeworkapp}
+        client-id: ${KEYCLOAK_CLIENT_ID:homeworkapp}
+        secret: ${KEYCLOAK_SECRET:secret}

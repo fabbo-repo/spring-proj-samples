@@ -16,7 +16,7 @@ public interface TaskJpaRepository extends JpaRepository<TaskJpaEntity, UUID> {
 
     @Query(
             """
-                    UPDATE Task t
+                    UPDATE TaskJpaEntity t
                     SET t.finished = true
                     WHERE t.id = :id
                     """
