@@ -67,7 +67,7 @@ public class KeycloakProvider {
     public URI getLogoutEndpoint() throws URISyntaxException {
         return new URI(
                 serverUrl
-                        .concat("realms/")
+                        .concat("/realms/")
                         .concat(realm)
                         .concat(LOGOUT_ENDPOINT));
     }

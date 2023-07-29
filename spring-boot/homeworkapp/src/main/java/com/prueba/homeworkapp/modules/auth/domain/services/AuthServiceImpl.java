@@ -51,8 +51,8 @@ public class AuthServiceImpl implements AuthService {
                         .id(userId)
                         .email(access.getEmail())
                         .username(access.getEmail().split("@")[0])
-                        .firstName(access.getEmail().split("@")[0])
-                        .lastName(access.getEmail().split("@")[0])
+                        .firstName("")
+                        .lastName("")
                         .build()
             );
             return accessMapper.userAndJwtsToDto(user, jwts);

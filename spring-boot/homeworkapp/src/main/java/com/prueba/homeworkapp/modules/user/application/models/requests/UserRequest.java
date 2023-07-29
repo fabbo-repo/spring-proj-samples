@@ -18,10 +18,10 @@ public record UserRequest(
         @NotBlank
         @Size(max = 300)
         String password,
-        @NotBlank
+        @NotNull
         @Size(max = 50)
         String firstName,
-        @NotBlank
+        @NotNull
         @Size(max = 50)
         String lastName,
         @Min(0)

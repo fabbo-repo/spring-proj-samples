@@ -60,12 +60,12 @@ public class UserJpaEntity {
     @Column(name = EMAIL_COL)
     private String email;
 
-    @NotBlank
+    @NotNull
     @Size(max = 50)
     @Column(name = FIRST_NAME_COL)
     private String firstName;
 
-    @NotBlank
+    @NotNull
     @Size(max = 50)
     @Column(name = LAST_NAME_COL)
     private String lastName;

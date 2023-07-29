@@ -16,10 +16,8 @@ public record UserPatchRequest(
         @NotEmpty
         @Size(max = 300)
         String password,
-        @NotEmpty
         @Size(max = 50)
         String firstName,
-        @NotEmpty
         @Size(max = 50)
         String lastName,
         @Min(0)
