@@ -34,6 +34,7 @@ import java.util.UUID;
 @Table(name = UserJpaEntity.TABLE_NAME)
 public class UserJpaEntity {
     public final static String TABLE_NAME = "app_user";
+
     public final static String SORT_FIELD = "createdAt";
     public final static String ID_COL = "id";
     public final static String USERNAME_COL = "username";

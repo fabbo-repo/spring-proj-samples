@@ -3,26 +3,26 @@ spring:
         name: homeworkapp
     datasource:
         initialization-mode: always
-        driverClassName: org.postgresql.Driver
+        driver-class-name: org.postgresql.Driver
         url: jdbc:postgresql://localhost:31500/homework_db
         username: pguser
         password: password
     jpa:
         show-sql: true
-        generate-ddl: true
         hibernate:
-            ddl-auto: create-drop
+            ddl-auto: validate
         properties:
             hibernate:
                 format_sql: true
-    profiles:
-        active: test
     security:
         oauth2:
             resourceserver:
                 jwt:
                     issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:39080/realms/homeworkapp}
                     jwk-set-uri: ${KEYCLOAK_JWKS_URI:http://localhost:39080/realms/homeworkapp/protocol/openid-connect/certs}
+
+    flyway:
+        enabled: true
 
 server:
     port: 8080
@@ -41,4 +41,4 @@ api:
         server-url: ${KEYCLOAK_URL:http://localhost:39080}
         realm: ${KEYCLOAK_REALM:homeworkapp}
         client-id: ${KEYCLOAK_CLIENT_ID:homeworkapp}
-        secret: ${KEYCLOAK_SECRET:secret}
+        secret: ${KEYCLOAK_SECRET:Ggs9VG5HLSG3DvpN8eZS2NWTic5oBPPv}

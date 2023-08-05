@@ -37,6 +37,7 @@ import java.util.UUID;
 @Table(name = TaskJpaEntity.TABLE_NAME)
 public class TaskJpaEntity {
     public final static String TABLE_NAME = "task";
+
     public final static String SORT_FIELD = "createdAt";
     public final static String ID_COL = "id";
     private final static String TITLE_COL = "title";
