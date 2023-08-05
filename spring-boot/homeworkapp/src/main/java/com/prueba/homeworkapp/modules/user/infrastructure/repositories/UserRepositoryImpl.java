@@ -16,7 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 
 @Repository
@@ -51,6 +53,15 @@ public class UserRepositoryImpl implements UserRepository {
                         )
                 );
         return userMapper.entityToDto(userJpaEntity);
+    }
+
+    @Override
+    public User findById(final UUID id, final Supplier<User> orElse) {
+        final Optional<UserJpaEntity> userJpaEntity = userJpaRepository.findById(id);
+        if (userJpaEntity.isPresent()) {
+            return userMapper.entityToDto(userJpaEntity.get());
+        }
+        return orElse.get();
     }
 
     @Override

@@ -45,21 +45,19 @@ public class AuthServiceImpl implements AuthService {
         final UUID userId = UUID.fromString(
                 decodedAccessToken.get("sub").getAsString()
         );
-        if (!userRepository.existsById(userId)) {
-            final User user = userRepository.save(
-                    User.builder()
-                        .id(userId)
-                        .email(access.getEmail())
-                        .username(access.getEmail().split("@")[0])
-                        .firstName("")
-                        .lastName("")
-                        .build()
-            );
-            return accessMapper.userAndJwtsToDto(user, jwts);
-        } else {
-            final User user = userRepository.findById(userId);
-            return accessMapper.userAndJwtsToDto(user, jwts);
-        }
+        final User user = userRepository.findById(
+                userId,
+                () -> userRepository.save(
+                        User.builder()
+                            .id(userId)
+                            .email(access.getEmail())
+                            .username(access.getEmail().split("@")[0])
+                            .firstName("")
+                            .lastName("")
+                            .build()
+                )
+        );
+        return accessMapper.userAndJwtsToDto(user, jwts);
     }
 
     @Override
