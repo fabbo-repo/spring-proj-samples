@@ -7,9 +7,11 @@ import com.prueba.homeworkapp.modules.user.application.models.responses.ProfileR
 import com.prueba.homeworkapp.modules.user.application.models.responses.UserResponse;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.services.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,9 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(path = UserController.CONTROLLER_PATH)
+@Validated
+@Tag(name = "User API")
 @RequiredArgsConstructor
 public class UserController {
+    public static final String CONTROLLER_PATH = "/user";
 
     private final UserService userService;
 

@@ -9,18 +9,23 @@ import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Jwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Refresh;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwts;
 import com.prueba.homeworkapp.modules.auth.domain.services.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(path = AuthController.CONTROLLER_PATH)
+@Validated
+@Tag(name = "Auth API")
 @RequiredArgsConstructor
 public class AuthController {
+    public static final String CONTROLLER_PATH = "/auth";
 
     private final AuthService authService;
 
