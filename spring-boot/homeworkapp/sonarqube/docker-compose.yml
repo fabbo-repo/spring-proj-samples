@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+
+  sonarqube:
+    image: sonarqube:community
+    volumes:
+      - ./data:/opt/sonarqube/data
+      - ./extensions:/opt/sonarqube/extensions
+      - ./logs:/opt/sonarqube/logs
+    ports:
+      - "48010:9000"

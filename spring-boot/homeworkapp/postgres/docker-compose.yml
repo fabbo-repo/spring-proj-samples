@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres:14.1-alpine
+    container_name: homeworkapp-dev-db
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "31320:5432"
+    restart: unless-stopped
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    #  - ./initdb:/docker-entrypoint-initdb.d
+    networks:
+      homeworkapp-db-net:
+        ipv4_address: 192.168.92.20
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: homeworkapp-dev-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=admin1234
+    ports:
+      - "31050:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin-volume:/var/lib/pgadmin
+    restart: unless-stopped
+    networks:
+      homeworkapp-db-net:
+        ipv4_address: 192.168.92.25
+
+networks:
+  homeworkapp-db-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.92.0/24"
+
+volumes:
+  pgadmin-volume:
