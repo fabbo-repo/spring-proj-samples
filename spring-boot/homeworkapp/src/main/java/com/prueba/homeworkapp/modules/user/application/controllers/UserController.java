@@ -7,10 +7,13 @@ import com.prueba.homeworkapp.modules.user.application.models.responses.ProfileR
 import com.prueba.homeworkapp.modules.user.application.models.responses.UserResponse;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.services.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +38,11 @@ public class UserController {
     private final UserControllerMapper userMapper = UserControllerMapper.INSTANCE;
 
     @GetMapping
-    public ResponseEntity<UserResponse> getUser() {
-        final User user = userService.getUser(UUID.randomUUID());
+    public ResponseEntity<UserResponse> getUser(
+            @Parameter(hidden = true) @AuthenticationPrincipal final Jwt principal
+    ) {
+        final User user = userService.getUser(
+                UUID.fromString(principal.getSubject()));
         return ResponseEntity.ok(userMapper.dtoToResponse(user));
     }
 
@@ -48,9 +54,11 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<Void> updateUser(
-            @RequestBody @Valid UserRequest userRequest
+            @RequestBody @Valid UserRequest userRequest,
+            @Parameter(hidden = true) @AuthenticationPrincipal final Jwt principal
     ) {
         final User user = userMapper.requestToDto(userRequest);
+        user.setId(UUID.fromString(principal.getSubject()));
         userService.updateUser(user);
         return ResponseEntity.noContent().build();
     }

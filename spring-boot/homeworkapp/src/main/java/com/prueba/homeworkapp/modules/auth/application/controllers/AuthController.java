@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     public static final String CONTROLLER_PATH = "/auth";
+    public static final String POST_ACCESS_SUB_PATH = "/access";
+    public static final String POST_REFRESH_SUB_PATH = "/refresh";
+    public static final String POST_LOGOUT_SUB_PATH = "/logout";
 
     private final AuthService authService;
 
@@ -33,7 +36,7 @@ public class AuthController {
 
     private final RefreshControllerMapper refreshMapper = RefreshControllerMapper.INSTANCE;
 
-    @PostMapping("/access")
+    @PostMapping(POST_ACCESS_SUB_PATH)
     public ResponseEntity<UserAndJwts> getAccessToken(
             @RequestBody @Valid AccessRequest accessRequest
     ) {
@@ -41,7 +44,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.access(access));
     }
 
-    @PostMapping("/refresh")
+    @PostMapping(POST_REFRESH_SUB_PATH)
     public ResponseEntity<Jwts> refreshToken(
             @RequestBody @Valid RefreshRequest refreshRequest
     ) {
@@ -49,7 +52,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.refresh(refresh));
     }
 
-    @PostMapping("/logout")
+    @PostMapping(POST_LOGOUT_SUB_PATH)
     public ResponseEntity<Void> logout(
             @RequestBody @Valid RefreshRequest refreshRequest
     ) {

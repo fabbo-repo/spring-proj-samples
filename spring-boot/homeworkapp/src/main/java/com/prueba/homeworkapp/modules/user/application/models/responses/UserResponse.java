@@ -1,5 +1,6 @@
 package com.prueba.homeworkapp.modules.user.application.models.responses;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -11,6 +12,8 @@ public record UserResponse(
         String email,
         String firstName,
         String lastName,
-        Integer age
+        Integer age,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
 }

@@ -1,9 +1,9 @@
 package com.prueba.homeworkapp.modules.task.infrastructure.models.entities;
 
+import com.prueba.homeworkapp.core.models.entities.Auditable;
 import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -18,11 +18,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -33,9 +28,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = TaskJpaEntity.TABLE_NAME)
-public class TaskJpaEntity {
+public class TaskJpaEntity extends Auditable<String> {
     public final static String TABLE_NAME = "task";
 
     public final static String SORT_FIELD = "createdAt";
@@ -46,10 +40,6 @@ public class TaskJpaEntity {
     private final static String FINISHED_AT_COL = "finished_date";
     private final static String FINISHED_COL = "is_finished";
     private final static String TASK_STATUS_COL = "task_status";
-    public final static String CREATED_AT_COL = "created_at";
-    private final static String CREATED_BY_COL = "created_by";
-    private final static String UPDATED_AT_COL = "updated_at";
-    private final static String UPDATED_BY_COL = "updated_by";
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -80,20 +70,4 @@ public class TaskJpaEntity {
     @Column(name = TASK_STATUS_COL)
     @Enumerated(EnumType.STRING)
     private TaskStatusEnum taskStatus;
-
-    @CreatedDate
-    @Column(name = CREATED_AT_COL, updatable = false)
-    private LocalDateTime createdAt; // audit field
-
-    @CreatedBy
-    @Column(name = CREATED_BY_COL, updatable = false)
-    private String createdBy; // audit field
-
-    @LastModifiedDate
-    @Column(name = UPDATED_AT_COL, insertable = false)
-    private LocalDateTime updatedAt; // audit field
-
-    @LastModifiedBy
-    @Column(name = UPDATED_BY_COL, insertable = false)
-    private String updatedBy; // audit field
 }

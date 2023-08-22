@@ -13,9 +13,6 @@ public record UserPatchRequest(
         String username,
         @Email
         String email,
-        @NotEmpty
-        @Size(max = 300)
-        String password,
         @Size(max = 50)
         String firstName,
         @Size(max = 50)

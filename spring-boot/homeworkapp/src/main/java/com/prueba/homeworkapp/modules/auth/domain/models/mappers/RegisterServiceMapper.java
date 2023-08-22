@@ -18,8 +18,13 @@ public interface RegisterServiceMapper {
     boolean USER_CREDENTIALS_TEMPORARY = false;
 
     @Mapping(target = "credentials", source = "register", qualifiedByName = "passwordCredentials")
-    @Mapping(target = "emailVerified", expression="java(true)")
-    @Mapping(target = "enabled", expression="java(true)")
+    @Mapping(target = "emailVerified", expression = "java(true)")
+    @Mapping(target = "enabled", expression = "java(true)")
+    @Mapping(target = "self", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdTimestamp", ignore = true)
+    @Mapping(target = "totp", ignore = true)
+    @Mapping(target = "attributes", ignore = true)
     UserRepresentation dtoToRepresentation(final Register register);
 
     @Named("passwordCredentials")

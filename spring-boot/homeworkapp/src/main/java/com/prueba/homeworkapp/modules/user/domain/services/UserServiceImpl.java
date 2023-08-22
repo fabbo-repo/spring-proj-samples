@@ -21,12 +21,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(UUID id) {
-        return null;
+        return userRepository.findById(id);
     }
 
     @Override
-    public void updateUser(User user) {
-
+    public void updateUser(final User user) {
+        final User dbUser = getUser(user.getId());
+        dbUser.setUsername(user.getUsername());
+        dbUser.setFirstName(user.getFirstName());
+        dbUser.setLastName(user.getLastName());
+        dbUser.setAge(user.getAge());
+        userRepository.save(dbUser);
     }
 
     @Override

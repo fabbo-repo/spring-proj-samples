@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.user.application.models.requests;
 
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,19 +13,13 @@ public record UserRequest(
         @Size(max = 30)
         String username,
         @NotNull
-        @Email
-        String email,
-        @NotBlank
-        @Size(max = 300)
-        String password,
-        @NotNull
         @Size(max = 50)
         String firstName,
         @NotNull
         @Size(max = 50)
         String lastName,
         @Min(0)
-        @Min(200)
+        @Max(200)
         int age
 ) {
 }
