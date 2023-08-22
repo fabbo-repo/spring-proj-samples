@@ -85,6 +85,8 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(final User user) {
         final UserJpaEntity userJpaEntity = userMapper.dtoToEntity(user);
+        userJpaEntity.setCreatedAt(user.getCreatedAt());
+        userJpaEntity.setCreatedBy(user.getCreatedBy());
         return userMapper.entityToDto(
                 userJpaRepository.save(userJpaEntity)
         );
