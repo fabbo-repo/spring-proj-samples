@@ -7,7 +7,6 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import java.util.Collections;
@@ -34,7 +33,6 @@ public interface RegisterMapper {
     @Mapping(target = "attributes", ignore = true)
     UserRepresentation dtoToRepresentation(final Register register);
 
-    @Named("passwordCredentials")
     default List<CredentialRepresentation> passwordCredentials(final Register register) {
         final CredentialRepresentation credentials = new CredentialRepresentation();
         credentials.setTemporary(USER_CREDENTIALS_TEMPORARY);
