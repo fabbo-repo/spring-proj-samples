@@ -2,7 +2,7 @@ package com.prueba.homeworkapp.core.models.mapper;
 
 import com.prueba.homeworkapp.core.models.dtos.PageDto;
 import com.prueba.homeworkapp.core.models.exceptions.PageNotFoundException;
-import com.prueba.homeworkapp.modules.task.infrastructure.models.entities.TaskJpaEntity;
+import com.prueba.homeworkapp.modules.task.models.entities.TaskJpaEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

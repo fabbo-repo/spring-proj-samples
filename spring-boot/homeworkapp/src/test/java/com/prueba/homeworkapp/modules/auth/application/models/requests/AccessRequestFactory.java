@@ -1,5 +1,6 @@
 package com.prueba.homeworkapp.modules.auth.application.models.requests;
 
+import com.prueba.homeworkapp.modules.auth.models.requests.AccessRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

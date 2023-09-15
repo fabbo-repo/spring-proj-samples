@@ -1,5 +1,6 @@
 package com.prueba.homeworkapp.modules.auth.domain.models.dtos;
 
+import com.prueba.homeworkapp.modules.auth.models.dtos.UserAndJwts;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

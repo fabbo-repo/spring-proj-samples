@@ -2,13 +2,14 @@ package com.prueba.homeworkapp.modules.auth.application.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prueba.homeworkapp.ReplaceUnderscoresAndCamelCase;
-import com.prueba.homeworkapp.modules.auth.application.models.mappers.AccessControllerMapper;
-import com.prueba.homeworkapp.modules.auth.application.models.requests.AccessRequest;
+import com.prueba.homeworkapp.modules.auth.models.mappers.AccessMapper;
+import com.prueba.homeworkapp.modules.auth.models.requests.AccessRequest;
 import com.prueba.homeworkapp.modules.auth.application.models.requests.AccessRequestFactory;
-import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Access;
-import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwts;
+import com.prueba.homeworkapp.modules.auth.controllers.AuthController;
+import com.prueba.homeworkapp.modules.auth.models.dtos.Access;
+import com.prueba.homeworkapp.modules.auth.models.dtos.UserAndJwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwtsFactory;
-import com.prueba.homeworkapp.modules.auth.domain.services.AuthService;
+import com.prueba.homeworkapp.modules.auth.services.AuthService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -45,14 +46,15 @@ class AuthControllerTest {
     @MockBean
     private AuthService authService;
 
-    private final AccessControllerMapper accessMapper = AccessControllerMapper.INSTANCE;
+    private final AccessMapper accessMapper = AccessMapper.INSTANCE;
 
     @Test
     void givenValidAccessRequest_whenGetAccessToken_shouldReturn200Response() throws Exception {
         final UserAndJwts expectedResponse = UserAndJwtsFactory.userAndJwts();
-        final AccessRequest request = AccessRequestFactory.accessRequestBuilder()
-                                                          .email(expectedResponse.getEmail())
-                                                          .build();
+        final AccessRequest request = AccessRequestFactory
+                .accessRequestBuilder()
+                .email(expectedResponse.getEmail())
+                .build();
         final Access access = accessMapper.requestToDto(request);
 
         when(authService.access(access))
