@@ -1,15 +1,15 @@
 package com.prueba.homeworkapp.modules.auth.application.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prueba.homeworkapp.HomeworkappApplication;
 import com.prueba.homeworkapp.ReplaceUnderscoresAndCamelCase;
-import com.prueba.homeworkapp.modules.auth.models.mappers.AccessMapper;
-import com.prueba.homeworkapp.modules.auth.models.requests.AccessRequest;
-import com.prueba.homeworkapp.modules.auth.application.models.requests.AccessRequestFactory;
-import com.prueba.homeworkapp.modules.auth.controllers.AuthController;
-import com.prueba.homeworkapp.modules.auth.models.dtos.Access;
-import com.prueba.homeworkapp.modules.auth.models.dtos.UserAndJwts;
+import com.prueba.homeworkapp.modules.auth.domain.models.mappers.AccessMapper;
+import com.prueba.homeworkapp.modules.auth.domain.models.requests.AccessRequest;
+import com.prueba.homeworkapp.modules.auth.domain.models.requests.AccessRequestFactory;
+import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Access;
+import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwtsFactory;
-import com.prueba.homeworkapp.modules.auth.services.AuthService;
+import com.prueba.homeworkapp.modules.auth.domain.services.AuthService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @DisplayNameGeneration(ReplaceUnderscoresAndCamelCase.class)
+@ActiveProfiles(HomeworkappApplication.TEST_PROFILE)
 class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;

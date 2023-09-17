@@ -12,7 +12,7 @@
 	<artifactId>homeworkapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>homeworkapp</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Application sample for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
 		<spring-boot.version>3.1.2</spring-boot.version>
@@ -29,6 +29,14 @@
 		<assertj-core.version>3.24.2</assertj-core.version>
 		<spring-security-test.version>6.1.1</spring-security-test.version>
 		<jacoco.version>0.8.10</jacoco.version>
+		<!-- Sonar Properties -->
+		<sonar.coverage.exclusions>
+			src/main/java/com/prueba/homeworkapp/core/**/*,
+			src/main/java/com/prueba/homeworkapp/modules/**/application/handlers/*,
+			src/main/java/com/prueba/homeworkapp/modules/**/infrastructure/providers/*,
+			src/main/java/com/prueba/homeworkapp/modules/**/domain/models/**/*,
+			src/main/java/com/prueba/homeworkapp/HomeworkappApplication.java
+		</sonar.coverage.exclusions>
 	</properties>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
@@ -153,11 +161,15 @@
 	</dependencies>
 
 	<build>
+		<finalName>homeworkapp</finalName>
 		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
 				<configuration>
 					<annotationProcessorPaths>
 						<path>

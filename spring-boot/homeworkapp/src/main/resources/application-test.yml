@@ -1,0 +1,12 @@
+api:
+  pagination:
+    page-size: 10
+  keycloak:
+    server-url: ${KEYCLOAK_URL}
+    realm: ${KEYCLOAK_REALM}
+    client-id: ${KEYCLOAK_CLIENT_ID}
+    secret: ${KEYCLOAK_SECRET}
+  cookie:
+    http-only: true
+    same-site: Strict
+    secure: false

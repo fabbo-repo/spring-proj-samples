@@ -1,6 +1,12 @@
+logging:
+    level:
+        org:
+            slf4j: trace
+            springframework:
+                security: info
+                transaction:
+                    interceptor: trace
 spring:
-    application:
-        name: homeworkapp
     config:
         import: optional:file:api.env[.properties]
     datasource:
@@ -11,10 +17,9 @@ spring:
         password: ${POSTGRES_DB_PASSWORD}
     jpa:
         show-sql: true
-        hibernate:
-            ddl-auto: validate
         properties:
             hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
                 format_sql: true
     security:
         oauth2:
@@ -22,7 +27,6 @@ spring:
                 jwt:
                     issuer-uri: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}
                     jwk-set-uri: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
-
     flyway:
         enabled: true
 
@@ -44,3 +48,7 @@ api:
         realm: ${KEYCLOAK_REALM}
         client-id: ${KEYCLOAK_CLIENT_ID}
         secret: ${KEYCLOAK_SECRET}
+    cookie:
+        http-only: true
+        same-site: Strict
+        secure: false

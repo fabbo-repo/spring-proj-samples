@@ -1,10 +1,21 @@
 package com.prueba.homeworkapp;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -24,6 +35,14 @@ public class TestUtils {
 
     public static int randomInt(final int min, final int max) {
         return new Random().nextInt((max - min) + 1) + min;
+    }
+
+    public static long randomLong() {
+        return new Random().nextLong();
+    }
+
+    public static long randomLong(final long min, final long max) {
+        return new Random().nextLong((max - min) + 1L) + min;
     }
 
     public static Float randomFloat() {
@@ -82,5 +101,36 @@ public class TestUtils {
                 Instant.ofEpochSecond(randomSeconds),
                 ZoneOffset.UTC
         );
+    }
+
+    public static JwtAuthenticationToken getMockJwtToken(final String subject) {
+        final Jwt jwt = Jwt
+                .withTokenValue("token")
+                .header("alg", "none")
+                .subject(subject)
+                .build();
+        return new JwtAuthenticationToken(jwt);
+    }
+
+    @SneakyThrows
+    public static String randomJwt(final String subject) {
+        final SecureRandom random = new SecureRandom();
+        byte[] sharedSecret = new byte[32];
+        random.nextBytes(sharedSecret);
+
+        final JWSSigner signer = new MACSigner(sharedSecret);
+
+        final JWTClaimsSet.Builder claimsSet = new JWTClaimsSet.Builder();
+        claimsSet.subject(subject);
+        claimsSet.issuer("http://example.com");
+        claimsSet.issueTime(new Date(new Date().getTime() + 60 * 1000));
+        claimsSet.expirationTime(new Date(new Date().getTime() + 60 * 1000));
+
+        final SignedJWT signedJWT = new SignedJWT(
+                new JWSHeader(JWSAlgorithm.HS256), claimsSet.build());
+
+        signedJWT.sign(signer);
+
+        return signedJWT.serialize();
     }
 }

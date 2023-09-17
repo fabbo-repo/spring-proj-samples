@@ -1,7 +1,7 @@
 package com.prueba.homeworkapp.core.config;
 
 import com.prueba.homeworkapp.HomeworkappApplication;
-import com.prueba.homeworkapp.modules.auth.handlers.AuthAccessDeniedHandler;
+import com.prueba.homeworkapp.modules.auth.application.handlers.AuthAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
