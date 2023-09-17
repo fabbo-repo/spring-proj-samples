@@ -2,7 +2,6 @@ package com.prueba.homeworkapp.core.config;
 
 import com.prueba.homeworkapp.HomeworkappApplication;
 import com.prueba.homeworkapp.modules.auth.application.handlers.AuthAccessDeniedHandler;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,9 +16,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Value("${oauth2.resourceserver.jwt.issuer-uri:}")
-    private String issuer;
-
     @Bean
     @Profile(HomeworkappApplication.NON_TEST_PROFILE)
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
