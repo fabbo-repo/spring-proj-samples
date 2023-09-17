@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.auth.infrastructure.clients;
+package com.prueba.homeworkapp.modules.auth.domain.clients;
 
 import org.keycloak.representations.idm.UserRepresentation;
 import org.keycloak.representations.idm.UserSessionRepresentation;

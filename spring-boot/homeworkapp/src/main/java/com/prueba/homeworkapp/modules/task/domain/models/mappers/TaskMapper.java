@@ -13,11 +13,9 @@ public interface TaskMapper {
     TaskMapper INSTANCE = Mappers.getMapper(TaskMapper.class);
 
     @Mapping(target = "id", ignore = true)
-    Task requestToDto(final TaskRequest taskRequest);
+    TaskJpaEntity requestToEntity(final TaskRequest taskRequest);
 
     TaskResponse dtoToResponse(final Task task);
 
-    TaskJpaEntity dtoToEntity(final Task task);
-
-    Task entityToDto(final TaskJpaEntity taskJpaEntity);
+    TaskResponse entityToResponse(final TaskJpaEntity taskJpaEntity);
 }

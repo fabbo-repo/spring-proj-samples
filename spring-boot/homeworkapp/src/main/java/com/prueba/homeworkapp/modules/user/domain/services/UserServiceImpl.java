@@ -2,7 +2,7 @@ package com.prueba.homeworkapp.modules.user.domain.services;
 
 import com.prueba.homeworkapp.modules.auth.infrastructure.clients.KeycloakAdminClient;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
-import com.prueba.homeworkapp.modules.user.infrastructure.repositories.UserRepository;
+import com.prueba.homeworkapp.modules.user.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

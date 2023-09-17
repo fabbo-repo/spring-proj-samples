@@ -1,11 +1,9 @@
 package com.prueba.homeworkapp.modules.task.application.controllers;
 
 import com.prueba.homeworkapp.core.models.dtos.PageDto;
-import com.prueba.homeworkapp.modules.task.domain.models.mappers.TaskMapper;
+import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import com.prueba.homeworkapp.modules.task.domain.models.requests.TaskRequest;
 import com.prueba.homeworkapp.modules.task.domain.models.responses.TaskResponse;
-import com.prueba.homeworkapp.modules.task.domain.models.dtos.Task;
-import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import com.prueba.homeworkapp.modules.task.domain.sevices.TaskService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -48,20 +46,18 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    private final TaskMapper taskMapper = TaskMapper.INSTANCE;
-
     @GetMapping(GET_TASK_SUB_PATH)
     public ResponseEntity<TaskResponse> getTask(@PathVariable final UUID id) {
-        final Task task = taskService.getTask(id);
-        return ResponseEntity.ok(taskMapper.dtoToResponse(task));
+        final TaskResponse task = taskService.getTask(id);
+        return ResponseEntity.ok(task);
     }
 
     @GetMapping
     public ResponseEntity<PageDto<TaskResponse>> getTasks(
             @RequestParam(defaultValue = "0") @Min(0) final Integer page
     ) {
-        final PageDto<Task> taskPage = taskService.getTasks(page);
-        return ResponseEntity.ok(taskPage.map(taskMapper::dtoToResponse));
+        final PageDto<TaskResponse> taskPage = taskService.getTasks(page);
+        return ResponseEntity.ok(taskPage);
     }
 
     @GetMapping(GET_TASK_BY_TASK_STATUS_SUB_PATH)
@@ -69,23 +65,19 @@ public class TaskController {
             @PathVariable final TaskStatusEnum status,
             @RequestParam(defaultValue = "0") @Min(0) final Integer page
     ) {
-        final PageDto<Task> taskPage = taskService.getTasksByTaskStatus(status, page);
-        return ResponseEntity.ok(taskPage.map(taskMapper::dtoToResponse));
+        final PageDto<TaskResponse> taskPage = taskService.getTasksByTaskStatus(status, page);
+        return ResponseEntity.ok(taskPage);
     }
 
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(@RequestBody @Valid final TaskRequest request) {
-        final Task task = taskMapper.requestToDto(request);
+        final TaskResponse response = taskService.createTask(request);
         final URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path(GET_TASK_SUB_PATH)
-                .buildAndExpand(task.getId()).toUri();
-        return ResponseEntity.created(
-                location
-        ).body(
-                taskMapper.dtoToResponse(
-                        taskService.createTask(task)
-                )
-        );
+                .buildAndExpand(response.id()).toUri();
+        return ResponseEntity
+                .created(location)
+                .body(response);
     }
 
     @DeleteMapping(DEL_TASK_SUB_PATH)

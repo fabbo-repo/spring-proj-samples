@@ -1,10 +1,8 @@
 package com.prueba.homeworkapp.core.config;
 
-import com.prueba.homeworkapp.HomeworkappApplication;
 import com.prueba.homeworkapp.modules.auth.application.handlers.AuthAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,7 +15,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
     @Bean
-    @Profile(HomeworkappApplication.NON_TEST_PROFILE)
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         http
                 .cors(withDefaults()) // by default a bean with "corsConfigurationSource" as name will be used

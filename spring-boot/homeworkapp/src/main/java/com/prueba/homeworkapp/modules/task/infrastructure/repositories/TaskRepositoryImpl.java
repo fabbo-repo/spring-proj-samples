@@ -3,20 +3,29 @@ package com.prueba.homeworkapp.modules.task.infrastructure.repositories;
 import com.prueba.homeworkapp.core.models.dtos.PageDto;
 import com.prueba.homeworkapp.core.models.exceptions.EntityNotFoundException;
 import com.prueba.homeworkapp.core.models.mapper.PageMapper;
-import com.prueba.homeworkapp.modules.task.domain.models.dtos.Task;
 import com.prueba.homeworkapp.modules.task.domain.models.entities.TaskJpaEntity;
 import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
-import com.prueba.homeworkapp.modules.task.domain.models.mappers.TaskMapper;
 import com.prueba.homeworkapp.modules.task.domain.models.views.TaskFinishedJpaView;
+import com.prueba.homeworkapp.modules.task.domain.repositories.TaskRepository;
 import com.prueba.homeworkapp.modules.task.infrastructure.repositories.jpa.TaskJpaRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -30,9 +39,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     private final String sortField = TaskJpaEntity.SORT_FIELD;
 
-    private final TaskMapper taskMapper = TaskMapper.INSTANCE;
-
-    private final PageMapper<Task> pageMapper = new PageMapper<>();
+    private final PageMapper<TaskJpaEntity> pageMapper = new PageMapper<>();
 
     @Override
     public boolean existsById(final UUID id) {
@@ -40,17 +47,8 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public Task findById(final UUID id) {
-        final TaskJpaEntity taskJpaEntity = taskJpaRepository
-                .findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(
-                                TaskJpaEntity.TABLE_NAME,
-                                TaskJpaEntity.ID_COL,
-                                id
-                        )
-                );
-        return taskMapper.entityToDto(taskJpaEntity);
+    public Optional<TaskJpaEntity> findById(final UUID id) {
+        return taskJpaRepository.findById(id);
     }
 
     @Override
@@ -68,20 +66,19 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public PageDto<Task> findAll(final int pageNum) {
+    public PageDto<TaskJpaEntity> findAll(final int pageNum) {
         final Pageable pageable = PageRequest.of(
                 pageNum,
                 pageSize,
                 Sort.by(sortField).descending()
         );
-        final Page<Task> taskPage = taskJpaRepository
-                .findAll(pageable)
-                .map(taskMapper::entityToDto);
+        final Page<TaskJpaEntity> taskPage = taskJpaRepository
+                .findAll(pageable);
         return pageMapper.enityToDto(taskPage);
     }
 
     @Override
-    public PageDto<Task> findAllByTaskStatus(
+    public PageDto<TaskJpaEntity> findAllByTaskStatus(
             final TaskStatusEnum taskStatus, final int pageNum
     ) {
         final Pageable pageable = PageRequest.of(
@@ -89,9 +86,8 @@ public class TaskRepositoryImpl implements TaskRepository {
                 pageSize,
                 Sort.by(sortField).descending()
         );
-        final Page<Task> taskPage = taskJpaRepository
-                .findAllByTaskStatus(taskStatus, pageable)
-                .map(taskMapper::entityToDto);
+        final Page<TaskJpaEntity> taskPage = taskJpaRepository
+                .findAllByTaskStatus(taskStatus, pageable);
         return pageMapper.enityToDto(taskPage);
     }
 
@@ -101,11 +97,8 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public Task save(final Task task) {
-        final TaskJpaEntity taskJpaEntity = taskMapper.dtoToEntity(task);
-        return taskMapper.entityToDto(
-                taskJpaRepository.save(taskJpaEntity)
-        );
+    public TaskJpaEntity save(final TaskJpaEntity task) {
+        return taskJpaRepository.save(task);
     }
 
     @Override
@@ -113,5 +106,71 @@ public class TaskRepositoryImpl implements TaskRepository {
         final TaskJpaEntity task = taskJpaRepository.getReferenceById(id);
         task.setFinished(true);
         taskJpaRepository.save(task);
+    }
+
+    @Override
+    public PageDto<TaskJpaEntity> findAll(
+            final String title,
+            final String description,
+            final Boolean finished,
+            final LocalDateTime futureEstimatedDoneAt,
+            final int pageNum
+    ) {
+        final Specification<TaskJpaEntity> specification = new Specification<TaskJpaEntity>() {
+            @Override
+            public Predicate toPredicate(
+                    @NonNull
+                    final Root<TaskJpaEntity> root,
+                    @NonNull
+                    final CriteriaQuery<?> query,
+                    @NonNull
+                    final CriteriaBuilder criteriaBuilder
+            ) {
+                final List<Predicate> predicates = new ArrayList<>();
+                if (title != null) {
+                    predicates.add(
+                            criteriaBuilder.like(
+                                    root.get("title"),
+                                    "%" + title + "%"
+                            )
+                    );
+                }
+                if (description != null) {
+                    predicates.add(
+                            criteriaBuilder.like(
+                                    root.get("description"),
+                                    "%" + description + "%"
+                            )
+                    );
+                }
+                if (finished != null) {
+                    predicates.add(
+                            criteriaBuilder.equal(
+                                    root.get("finished"),
+                                    finished
+                            )
+                    );
+                }
+                if (futureEstimatedDoneAt != null) {
+                    predicates.add(
+                            criteriaBuilder.greaterThan(
+                                    root.get("estimatedDoneAt"),
+                                    futureEstimatedDoneAt
+                            )
+                    );
+                }
+                return criteriaBuilder.and(
+                        predicates.toArray(new Predicate[0])
+                );
+            }
+        };
+        final Pageable pageable = PageRequest.of(
+                pageNum,
+                pageSize,
+                Sort.by(sortField).descending()
+        );
+        final Page<TaskJpaEntity> taskPage = taskJpaRepository
+                .findAll(specification, pageable);
+        return pageMapper.enityToDto(taskPage);
     }
 }

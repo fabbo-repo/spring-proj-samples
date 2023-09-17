@@ -1,10 +1,8 @@
 package com.prueba.homeworkapp.core.config;
 
-import com.prueba.homeworkapp.HomeworkappApplication;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -29,7 +27,6 @@ public class CorsConfig {
     private String allowCredentials;
 
     @Bean
-    @Profile(HomeworkappApplication.NON_TEST_PROFILE)
     CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOriginPatterns(Arrays.asList(allowedOriginPatterns.split(",")));

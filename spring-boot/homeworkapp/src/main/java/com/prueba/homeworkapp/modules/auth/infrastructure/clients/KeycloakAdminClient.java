@@ -1,5 +1,6 @@
 package com.prueba.homeworkapp.modules.auth.infrastructure.clients;
 
+import com.prueba.homeworkapp.modules.auth.domain.clients.AuthAdminClient;
 import com.prueba.homeworkapp.modules.auth.infrastructure.providers.KeycloakProvider;
 import com.prueba.homeworkapp.modules.user.domain.models.exceptions.CannotCreateUserException;
 import com.prueba.homeworkapp.modules.user.domain.models.exceptions.CannotDeleteUserException;

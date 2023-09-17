@@ -7,6 +7,7 @@ import com.prueba.homeworkapp.modules.task.domain.models.entities.TaskJpaEntity;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 import com.prueba.homeworkapp.modules.user.domain.models.mappers.UserMapper;
+import com.prueba.homeworkapp.modules.user.domain.repositories.UserRepository;
 import com.prueba.homeworkapp.modules.user.infrastructure.repositories.jpa.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

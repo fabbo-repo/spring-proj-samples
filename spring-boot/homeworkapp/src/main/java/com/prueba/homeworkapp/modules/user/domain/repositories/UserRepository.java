@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.user.infrastructure.repositories;
+package com.prueba.homeworkapp.modules.user.domain.repositories;
 
 import com.prueba.homeworkapp.core.models.dtos.PageDto;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;

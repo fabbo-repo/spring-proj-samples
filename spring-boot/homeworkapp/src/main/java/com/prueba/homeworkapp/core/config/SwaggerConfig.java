@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
+@Profile({HomeworkappApplication.NON_TEST_PROFILE})
 public class SwaggerConfig {
     private final static String SWAGGER_TITLE = "HomeWorkApp API";
 

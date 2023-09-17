@@ -1,8 +1,8 @@
 package com.prueba.homeworkapp.modules.auth.domain.services;
 
 import com.nimbusds.jose.shaded.gson.JsonObject;
-import com.prueba.homeworkapp.modules.auth.infrastructure.clients.AuthAdminClient;
-import com.prueba.homeworkapp.modules.auth.infrastructure.clients.AuthClient;
+import com.prueba.homeworkapp.modules.auth.domain.clients.AuthAdminClient;
+import com.prueba.homeworkapp.modules.auth.domain.clients.AuthClient;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Access;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Jwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Refresh;
@@ -10,7 +10,7 @@ import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.mappers.AccessMapper;
 import com.prueba.homeworkapp.modules.auth.domain.models.mappers.RegisterMapper;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
-import com.prueba.homeworkapp.modules.user.infrastructure.repositories.UserRepository;
+import com.prueba.homeworkapp.modules.user.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

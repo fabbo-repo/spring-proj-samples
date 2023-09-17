@@ -1,30 +1,24 @@
 package com.prueba.homeworkapp.modules.user.infrastructure.seeders;
 
-import com.prueba.homeworkapp.HomeworkappApplication;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 import com.prueba.homeworkapp.modules.user.infrastructure.repositories.jpa.UserJpaRepository;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Service
-@Profile(HomeworkappApplication.DEV_PROFILE)
 @RequiredArgsConstructor
+@Service
 @Slf4j
-public class UserMockSeeder {
+public class UserJpaMockSeeder {
     private final List<UUID> userIds = new ArrayList<>();
 
     private final UserJpaRepository userJpaRepository;
 
-    @PostConstruct
-    private void onStartup() {
+    public void createData() {
         log.info("Creating User Mock Data...");
         for (final MockData userMockData : MockData.values()) {
             final UserJpaEntity userJpaEntity = userJpaRepository.save(
@@ -43,8 +37,7 @@ public class UserMockSeeder {
         log.info("User Mock Data created");
     }
 
-    @PreDestroy
-    private void onShutdown() {
+    public void deleteData() {
         log.info("Removing User Mock Data...");
         for (final UUID userId : userIds) {
             userJpaRepository.deleteById(userId);

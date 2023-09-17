@@ -1,11 +1,11 @@
 package com.prueba.homeworkapp.modules.user.application.controllers;
 
+import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.models.mappers.UserMapper;
 import com.prueba.homeworkapp.modules.user.domain.models.requests.UserPatchRequest;
 import com.prueba.homeworkapp.modules.user.domain.models.requests.UserRequest;
 import com.prueba.homeworkapp.modules.user.domain.models.responses.ProfileResponse;
 import com.prueba.homeworkapp.modules.user.domain.models.responses.UserResponse;
-import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.services.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

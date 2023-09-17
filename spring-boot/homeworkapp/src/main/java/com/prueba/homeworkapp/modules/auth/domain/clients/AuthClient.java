@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.auth.infrastructure.clients;
+package com.prueba.homeworkapp.modules.auth.domain.clients;
 
 import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Jwts;

@@ -7,6 +7,7 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.Tokens;
+import com.prueba.homeworkapp.modules.auth.domain.clients.AuthClient;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Jwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.exceptions.UnauthorizedException;
 import com.prueba.homeworkapp.modules.auth.infrastructure.providers.KeycloakProvider;

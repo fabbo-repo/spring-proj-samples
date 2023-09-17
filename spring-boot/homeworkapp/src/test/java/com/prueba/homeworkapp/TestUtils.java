@@ -6,6 +6,7 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -101,6 +102,12 @@ public class TestUtils {
                 Instant.ofEpochSecond(randomSeconds),
                 ZoneOffset.UTC
         );
+    }
+
+
+    public static TaskStatusEnum randomStatusEnum() {
+        return TaskStatusEnum.values()[
+                randomInt(0, TaskStatusEnum.values().length)];
     }
 
     public static JwtAuthenticationToken getMockJwtToken(final String subject) {
