@@ -8,8 +8,11 @@ import com.prueba.homeworkapp.modules.task.domain.models.enums.TaskStatusEnum;
 import com.prueba.homeworkapp.modules.task.domain.models.views.TaskFinishedJpaView;
 import com.prueba.homeworkapp.modules.task.domain.repositories.TaskRepository;
 import com.prueba.homeworkapp.modules.task.infrastructure.repositories.jpa.TaskJpaRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +36,9 @@ import java.util.UUID;
 public class TaskRepositoryImpl implements TaskRepository {
 
     private final TaskJpaRepository taskJpaRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Value("${api.pagination.page-size}")
     private int pageSize;
@@ -103,9 +109,14 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     public void saveTaskAsFinished(final UUID id) {
-        final TaskJpaEntity task = taskJpaRepository.getReferenceById(id);
-        task.setFinished(true);
-        taskJpaRepository.save(task);
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaUpdate<TaskJpaEntity> criteriaUpdate = criteriaBuilder.createCriteriaUpdate(TaskJpaEntity.class);
+        final Root<TaskJpaEntity> root = criteriaUpdate.from(TaskJpaEntity.class);
+
+        criteriaUpdate.set(root.get("finished"), true);
+        criteriaUpdate.where(criteriaBuilder.equal(root.get("id"), id));
+
+        entityManager.createQuery(criteriaUpdate).executeUpdate();
     }
 
     @Override
