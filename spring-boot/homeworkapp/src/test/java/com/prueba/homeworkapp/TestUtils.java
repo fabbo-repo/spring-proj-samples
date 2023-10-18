@@ -66,6 +66,10 @@ public class TestUtils {
         return randomText(randomInt(0, 1000));
     }
 
+    public static String randomText(final int min, final int max) {
+        return randomText(randomInt(min, max));
+    }
+
     public static String randomText(final int max) {
         final boolean useLetters = true;
         final boolean useNumbers = false;
@@ -107,7 +111,7 @@ public class TestUtils {
 
     public static TaskStatusEnum randomStatusEnum() {
         return TaskStatusEnum.values()[
-                randomInt(0, TaskStatusEnum.values().length)];
+                randomInt(0, TaskStatusEnum.values().length - 1)];
     }
 
     public static JwtAuthenticationToken getMockJwtToken(final String subject) {
