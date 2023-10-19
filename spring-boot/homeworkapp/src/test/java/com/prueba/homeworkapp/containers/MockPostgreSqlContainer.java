@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp;
+package com.prueba.homeworkapp.containers;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 

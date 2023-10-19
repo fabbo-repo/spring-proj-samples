@@ -2,7 +2,7 @@ package com.prueba.homeworkapp.modules.task.infrastructure.repositories;
 
 
 import com.prueba.homeworkapp.HomeworkappApplication;
-import com.prueba.homeworkapp.MockPostgreSqlContainer;
+import com.prueba.homeworkapp.containers.MockPostgreSqlContainer;
 import com.prueba.homeworkapp.ReplaceUnderscoresAndCamelCase;
 import com.prueba.homeworkapp.modules.task.domain.models.entities.TaskJpaEntity;
 import com.prueba.homeworkapp.modules.task.domain.models.entities.TaskJpaEntityFactory;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -29,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @DisplayNameGeneration(ReplaceUnderscoresAndCamelCase.class)
 @Testcontainers
-@ActiveProfiles(HomeworkappApplication.DEV_PROFILE)
+@ActiveProfiles(HomeworkappApplication.INT_TEST_PROFILE)
 class TaskRepositoryTest {
     @Container
     private static final PostgreSQLContainer<?> postgreSqlContainer = MockPostgreSqlContainer.getInstance();

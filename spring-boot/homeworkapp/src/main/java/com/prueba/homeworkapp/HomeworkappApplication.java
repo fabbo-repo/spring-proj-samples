@@ -9,6 +9,7 @@ public class HomeworkappApplication {
     public static final String DEV_PROFILE = "dev";
     public static final String TEST_PROFILE = "test";
     public static final String NON_TEST_PROFILE = "!test";
+    public static final String INT_TEST_PROFILE = "int-test";
 
     public static void main(String[] args) {
         SpringApplication.run(HomeworkappApplication.class, args);
