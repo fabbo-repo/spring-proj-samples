@@ -26,14 +26,6 @@ public class MockPostgreSqlContainer extends PostgreSQLContainer<MockPostgreSqlC
     }
 
     @Override
-    public void start() {
-        super.start();
-        System.setProperty("POSTGRES_DB_URL", container.getJdbcUrl());
-        System.setProperty("POSTGRES_DB_USER", container.getUsername());
-        System.setProperty("POSTGRES_DB_PASSWORD", container.getPassword());
-    }
-
-    @Override
     public void stop() {
         // Do nothing, JVM handles shut down
     }
