@@ -1,7 +1,7 @@
 package com.prueba.homeworkapp.modules.auth.infrastructure.clients;
 
 import com.prueba.homeworkapp.modules.auth.domain.clients.AuthAdminClient;
-import com.prueba.homeworkapp.modules.auth.infrastructure.providers.KeycloakProvider;
+import com.prueba.homeworkapp.core.config.KeycloakConfig;
 import com.prueba.homeworkapp.modules.user.domain.models.exceptions.CannotCreateUserException;
 import com.prueba.homeworkapp.modules.user.domain.models.exceptions.CannotDeleteUserException;
 import com.prueba.homeworkapp.modules.user.domain.models.exceptions.UserAlreadyExistsException;
@@ -23,25 +23,25 @@ import java.util.UUID;
 @Slf4j
 public class KeycloakAdminClient implements AuthAdminClient {
 
-    private final KeycloakProvider keycloakProvider;
+    private final KeycloakConfig keycloakConfig;
 
     @Override
     public UserRepresentation getUser(final UUID userId) {
-        final UsersResource usersResource = keycloakProvider.getUsersResource();
+        final UsersResource usersResource = keycloakConfig.getUsersResource();
         final UserResource userResource = usersResource.get(userId.toString());
         return userResource.toRepresentation();
     }
 
     @Override
     public List<UserSessionRepresentation> getSessions(final UUID userId) {
-        final UsersResource usersResource = keycloakProvider.getUsersResource();
+        final UsersResource usersResource = keycloakConfig.getUsersResource();
         final UserResource userResource = usersResource.get(userId.toString());
         return userResource.getUserSessions();
     }
 
     @Override
     public UUID createUser(final UserRepresentation user) {
-        final UsersResource usersResource = keycloakProvider.getUsersResource();
+        final UsersResource usersResource = keycloakConfig.getUsersResource();
         final Response response = usersResource.create(user);
         final Response.StatusType responseStatusInfo = response.getStatusInfo();
 
@@ -68,14 +68,14 @@ public class KeycloakAdminClient implements AuthAdminClient {
             final UserRepresentation userRepresentation
     ) {
         final UUID userId = UUID.fromString(userRepresentation.getId());
-        final UsersResource usersResource = keycloakProvider.getUsersResource();
+        final UsersResource usersResource = keycloakConfig.getUsersResource();
         final UserResource userResource = usersResource.get(userId.toString());
         userResource.update(userRepresentation);
     }
 
     @Override
     public void deleteUser(final UUID userId) {
-        final UsersResource usersResource = keycloakProvider.getUsersResource();
+        final UsersResource usersResource = keycloakConfig.getUsersResource();
         final Response response = usersResource.delete(userId.toString());
         final Response.StatusType responseStatusInfo = response.getStatusInfo();
 

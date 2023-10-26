@@ -4,13 +4,15 @@ import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.jose.shaded.gson.JsonParser;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.Tokens;
+import com.prueba.homeworkapp.core.config.KeycloakConfig;
 import com.prueba.homeworkapp.modules.auth.domain.clients.AuthClient;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Jwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.exceptions.UnauthorizedException;
-import com.prueba.homeworkapp.modules.auth.infrastructure.providers.KeycloakProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,11 +22,13 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import static org.keycloak.OAuth2Constants.SCOPE_OPENID;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class KeycloakClient implements AuthClient {
-    private final KeycloakProvider keycloakProvider;
+    private final KeycloakConfig keycloakConfig;
 
     @Override
     public Jwts access(
@@ -32,7 +36,7 @@ public class KeycloakClient implements AuthClient {
             final String password
     ) {
         try {
-            final TokenResponse tokenResponse = keycloakProvider.getAccessToken(
+            final TokenResponse tokenResponse = getAccessToken(
                     email,
                     password
             );
@@ -45,13 +49,6 @@ public class KeycloakClient implements AuthClient {
             final ErrorObject errorObject = tokenResponse
                     .toErrorResponse()
                     .getErrorObject();
-
-            log.error(
-                    "Unauthorized request for user {} : {} {}",
-                    email,
-                    errorObject.getHTTPStatusCode(),
-                    errorObject.getDescription()
-            );
 
             throw new UnauthorizedException(errorObject.getDescription());
         } catch (URISyntaxException | IllegalArgumentException | ParseException |
@@ -68,24 +65,16 @@ public class KeycloakClient implements AuthClient {
     @Override
     public Jwts refresh(final String refreshToken) {
         try {
-            log.info("Requesting access token for refresh token {}", refreshToken);
-
-            final TokenResponse tokenResponse = keycloakProvider.getNewRefreshToken(refreshToken);
+            final TokenResponse tokenResponse = getNewRefreshToken(refreshToken);
 
             if (tokenResponse.toHTTPResponse().indicatesSuccess()) {
-                log.debug("Successfully refreshed access for token {}", refreshToken);
+                log.info("Successfully refreshed access for token {}", refreshToken);
                 return tokenToJwts(tokenResponse);
             }
 
             final ErrorObject errorObject = tokenResponse
                     .toErrorResponse()
                     .getErrorObject();
-
-            log.error(
-                    "Unauthorized refresh request : {} {}",
-                    errorObject.getHTTPStatusCode(),
-                    errorObject.getDescription()
-            );
 
             throw new UnauthorizedException(errorObject.getDescription());
         } catch (URISyntaxException | IllegalArgumentException | ParseException |
@@ -101,26 +90,18 @@ public class KeycloakClient implements AuthClient {
     @Override
     public Void logout(final String refreshToken) {
         try {
-            log.info("Requesting logout for token {}", refreshToken);
-
-            final TokenResponse tokenResponse = keycloakProvider.getLogoutToken(
+            final TokenResponse tokenResponse = getLogoutToken(
                     refreshToken
             );
 
             if (tokenResponse.toHTTPResponse().indicatesSuccess()) {
-                log.debug("Successfully logout token {}", refreshToken);
+                log.info("Successfully logout token {}", refreshToken);
                 return null;
             }
 
             final ErrorObject errorObject = tokenResponse
                     .toErrorResponse()
                     .getErrorObject();
-
-            log.error(
-                    "Unauthorized refresh request : {} {}",
-                    errorObject.getHTTPStatusCode(),
-                    errorObject.getDescription()
-            );
 
             throw new UnauthorizedException(errorObject.getDescription());
         } catch (URISyntaxException | IllegalArgumentException | ParseException |
@@ -156,5 +137,33 @@ public class KeycloakClient implements AuthClient {
                 .accessExpiresIn(accessTokenObj.getLifetime())
                 .refreshExpiresIn(exp - iat)
                 .build();
+    }
+
+    public TokenResponse getAccessToken(final String username, final String password)
+            throws URISyntaxException, IOException, ParseException {
+        return TokenResponse.parse(new TokenRequest(
+                keycloakConfig.getTokenEndpoint(),
+                keycloakConfig.getClientAuth(),
+                keycloakConfig.getPasswordGrant(username, password),
+                new Scope(SCOPE_OPENID)
+        ).toHTTPRequest().send());
+    }
+
+    public TokenResponse getNewRefreshToken(final String refreshToken)
+            throws URISyntaxException, IOException, ParseException {
+        return TokenResponse.parse(new TokenRequest(
+                keycloakConfig.getTokenEndpoint(),
+                keycloakConfig.getClientAuth(),
+                keycloakConfig.getRefreshTokenGrant(refreshToken)
+        ).toHTTPRequest().send());
+    }
+
+    public TokenResponse getLogoutToken(final String refreshToken)
+            throws URISyntaxException, IOException, ParseException {
+        return TokenResponse.parse(new TokenRequest(
+                keycloakConfig.getLogoutEndpoint(),
+                keycloakConfig.getClientAuth(),
+                keycloakConfig.getRefreshTokenGrant(refreshToken)
+        ).toHTTPRequest().send());
     }
 }
