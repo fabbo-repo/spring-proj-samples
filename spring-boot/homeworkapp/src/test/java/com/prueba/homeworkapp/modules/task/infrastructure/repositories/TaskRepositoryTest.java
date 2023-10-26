@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -36,18 +38,27 @@ class TaskRepositoryTest {
     @Container
     private static final PostgreSQLContainer<?> postgreSqlContainer = MockPostgreSqlContainer.getInstance();
 
+    @DynamicPropertySource
+    static void registerSettings(DynamicPropertyRegistry registry) {
+        registry.add(
+                "spring.datasource.url",
+                postgreSqlContainer::getJdbcUrl
+        );
+    }
+
     @Autowired
     private TaskRepository taskRepository;
 
-    private TaskJpaEntity mockedTask;
-    private final List<TaskJpaEntity> mockedTaskList = new ArrayList<>();
+    private TaskJpaEntity testTask;
+
+    private final List<TaskJpaEntity> testTaskList = new ArrayList<>();
 
     @BeforeEach
-    void setUp() {
-        mockedTask = taskRepository.save(TaskJpaEntityFactory.taskJpaEntity());
-        mockedTaskList.add(mockedTask);
+    void beforeEach() {
+        testTask = taskRepository.save(TaskJpaEntityFactory.taskJpaEntity());
+        testTaskList.add(testTask);
         for (int i = 0; i < randomInt(20, 40); i++) {
-            mockedTaskList.add(
+            testTaskList.add(
                     taskRepository.save(
                             TaskJpaEntityFactory
                                     .taskJpaEntity()
@@ -60,7 +71,7 @@ class TaskRepositoryTest {
     @Transactional
     void storedTaskJpaEntity_whenExistsById_shouldReturnTrue() {
         final boolean taskExists = taskRepository.existsById(
-                mockedTask.getId()
+                testTask.getId()
         );
 
         assertTrue(taskExists);

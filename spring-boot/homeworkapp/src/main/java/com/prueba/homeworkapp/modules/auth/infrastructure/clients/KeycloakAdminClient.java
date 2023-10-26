@@ -27,10 +27,6 @@ public class KeycloakAdminClient implements AuthAdminClient {
 
     @Override
     public UserRepresentation getUser(final UUID userId) {
-        log.info("Getting data for user {} in Keycloak realm {}",
-                 userId, keycloakProvider.getRealm()
-        );
-
         final UsersResource usersResource = keycloakProvider.getUsersResource();
         final UserResource userResource = usersResource.get(userId.toString());
         return userResource.toRepresentation();
@@ -38,10 +34,6 @@ public class KeycloakAdminClient implements AuthAdminClient {
 
     @Override
     public List<UserSessionRepresentation> getSessions(final UUID userId) {
-        log.info("Getting data for user {} in Keycloak realm {}",
-                 userId, keycloakProvider.getRealm()
-        );
-
         final UsersResource usersResource = keycloakProvider.getUsersResource();
         final UserResource userResource = usersResource.get(userId.toString());
         return userResource.getUserSessions();
@@ -49,10 +41,6 @@ public class KeycloakAdminClient implements AuthAdminClient {
 
     @Override
     public UUID createUser(final UserRepresentation user) {
-        log.info("Creating user {} in Keycloak realm {}",
-                 user.getUsername(), keycloakProvider.getRealm()
-        );
-
         final UsersResource usersResource = keycloakProvider.getUsersResource();
         final Response response = usersResource.create(user);
         final Response.StatusType responseStatusInfo = response.getStatusInfo();
@@ -80,9 +68,6 @@ public class KeycloakAdminClient implements AuthAdminClient {
             final UserRepresentation userRepresentation
     ) {
         final UUID userId = UUID.fromString(userRepresentation.getId());
-        log.info("Updating user {} in Keycloak realm {}",
-                 userId, keycloakProvider.getRealm()
-        );
         final UsersResource usersResource = keycloakProvider.getUsersResource();
         final UserResource userResource = usersResource.get(userId.toString());
         userResource.update(userRepresentation);
@@ -90,9 +75,6 @@ public class KeycloakAdminClient implements AuthAdminClient {
 
     @Override
     public void deleteUser(final UUID userId) {
-        log.info("Deleting user {} in Keycloak realm {}",
-                 userId, keycloakProvider.getRealm()
-        );
         final UsersResource usersResource = keycloakProvider.getUsersResource();
         final Response response = usersResource.delete(userId.toString());
         final Response.StatusType responseStatusInfo = response.getStatusInfo();

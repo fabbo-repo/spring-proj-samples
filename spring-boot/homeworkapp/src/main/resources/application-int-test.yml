@@ -4,9 +4,9 @@ spring:
     datasource:
         initialization-mode: always
         driver-class-name: org.postgresql.Driver
-        url: ${POSTGRES_DB_URL}
-        username: ${POSTGRES_DB_USER}
-        password: ${POSTGRES_DB_PASSWORD}
+        url: jdbc:postgresql://localhost:5432/homework-test-db
+        username: postgres
+        password: password
     jpa:
         properties:
             hibernate:
@@ -16,7 +16,7 @@ spring:
         oauth2:
             resourceserver:
                 jwt:
-                    jwk-set-uri: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
+                    jwk-set-uri: http://localhost:8180/realms/test-realm/protocol/openid-connect/certs
     flyway:
         enabled: true
 
@@ -29,15 +29,15 @@ api:
     pagination:
         page-size: 10
     cors:
-        allowed-origin-patterns: ${CORS_ALLOWED_ORIGIN_PATTERNS:*}
-        allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PATCH,PUT,DELETE,OPTIONS,HEAD}
-        allowed-headers: ${CORS_ALLOWED_HEADERS:Authorization,Content-Type}
-        allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
+        allowed-origin-patterns: "*"
+        allowed-methods: GET,POST,PATCH,PUT,DELETE,OPTIONS,HEAD
+        allowed-headers: Authorization,Content-Type
+        allow-credentials: true
     keycloak:
-        server-url: ${KEYCLOAK_URL}
-        realm: ${KEYCLOAK_REALM}
-        client-id: ${KEYCLOAK_CLIENT_ID}
-        secret: ${KEYCLOAK_SECRET}
+        server-url: http://localhost:8180
+        realm: test-realm
+        client-id: test-client
+        secret: test-secret
     cookie:
         http-only: true
         same-site: Strict

@@ -28,16 +28,17 @@ public class KeycloakClient implements AuthClient {
 
     @Override
     public Jwts access(
-            final String username,
+            final String email,
             final String password
     ) {
         try {
-            log.info("Requesting access tokens for user: {}", username);
-
-            final TokenResponse tokenResponse = keycloakProvider.getAccessToken(username, password);
+            final TokenResponse tokenResponse = keycloakProvider.getAccessToken(
+                    email,
+                    password
+            );
 
             if (tokenResponse.toHTTPResponse().indicatesSuccess()) {
-                log.debug("Successfully authorized user {}", username);
+                log.info("Successfully authorized user {}", email);
                 return tokenToJwts(tokenResponse);
             }
 
@@ -47,7 +48,7 @@ public class KeycloakClient implements AuthClient {
 
             log.error(
                     "Unauthorized request for user {} : {} {}",
-                    username,
+                    email,
                     errorObject.getHTTPStatusCode(),
                     errorObject.getDescription()
             );
@@ -57,7 +58,7 @@ public class KeycloakClient implements AuthClient {
                  IOException ex) {
             log.error(
                     "Error handling authentication for user {} : {}",
-                    username,
+                    email,
                     ex.getMessage()
             );
             throw new RuntimeException(ex);

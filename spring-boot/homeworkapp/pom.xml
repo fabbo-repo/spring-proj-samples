@@ -29,6 +29,7 @@
 		<assertj-core.version>3.24.2</assertj-core.version>
 		<spring-security-test.version>6.1.1</spring-security-test.version>
 		<testcontainers.version>1.19.1</testcontainers.version>
+		<keycloak-testcontainers.version>3.0.0</keycloak-testcontainers.version>
 		<jacoco.version>0.8.10</jacoco.version>
 		<!-- Sonar Properties -->
 		<sonar.coverage.exclusions>
@@ -40,18 +41,17 @@
 		</sonar.coverage.exclusions>
 	</properties>
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<version>${spring-boot.version}</version>
-		</dependency>
+		<!-- Web -->
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${spring-boot.version}</version>
 		</dependency>
+
+		<!-- Annotations -->
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -65,6 +65,15 @@
 			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- Database -->
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
@@ -77,20 +86,6 @@
 			<artifactId>flyway-core</artifactId>
 			<version>${flyway.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>${mapstruct.version}</version>
-		</dependency>
-		<!-- Swagger -->
-		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>${swagger.version}</version>
-		</dependency>
-		<!-- PostgreSQL -->
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -98,7 +93,27 @@
 			<version>${postgresql.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- Mapper -->
+
+		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+
+		<!-- Swagger -->
+
+		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
 		<!-- Authentication and security -->
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -172,6 +187,13 @@
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<version>${testcontainers.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
+		<dependency>
+			<groupId>com.github.dasniko</groupId>
+			<artifactId>testcontainers-keycloak</artifactId>
+			<version>${keycloak-testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
