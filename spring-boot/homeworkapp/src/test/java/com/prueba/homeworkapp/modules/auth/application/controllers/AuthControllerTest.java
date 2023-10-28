@@ -3,12 +3,14 @@ package com.prueba.homeworkapp.modules.auth.application.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prueba.homeworkapp.HomeworkappApplication;
 import com.prueba.homeworkapp.ReplaceUnderscoresAndCamelCase;
-import com.prueba.homeworkapp.modules.auth.domain.models.mappers.AccessMapper;
-import com.prueba.homeworkapp.modules.auth.domain.models.requests.AccessRequest;
-import com.prueba.homeworkapp.modules.auth.domain.models.requests.AccessRequestFactory;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Access;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwtsFactory;
+import com.prueba.homeworkapp.modules.auth.domain.models.exceptions.UnauthorizedException;
+import com.prueba.homeworkapp.modules.auth.domain.models.mappers.AccessMapper;
+import com.prueba.homeworkapp.modules.auth.domain.models.mappers.RefreshMapper;
+import com.prueba.homeworkapp.modules.auth.domain.models.requests.AccessRequest;
+import com.prueba.homeworkapp.modules.auth.domain.models.requests.AccessRequestFactory;
 import com.prueba.homeworkapp.modules.auth.domain.services.AuthService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.prueba.homeworkapp.TestUtils.randomText;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,9 +52,17 @@ class AuthControllerTest {
     private AuthService authService;
 
     private final AccessMapper accessMapper = AccessMapper.INSTANCE;
-    
+
+    private final RefreshMapper refreshMapper = RefreshMapper.INSTANCE;
+
     public static final String POST_ACCESS_URL = AuthController.CONTROLLER_PATH
                                                  + AuthController.POST_ACCESS_SUB_PATH;
+
+    private static final String POST_REFRESH_URL = AuthController.CONTROLLER_PATH +
+                                                   AuthController.POST_REFRESH_SUB_PATH;
+
+    private static final String POST_LOGOUT_URL = AuthController.CONTROLLER_PATH
+                                                  + AuthController.POST_LOGOUT_SUB_PATH;
 
     @Test
     void givenValidAccessRequest_whenGetAccessToken_shouldReturn200Response() throws Exception {
@@ -82,4 +93,24 @@ class AuthControllerTest {
                 objectMapper.writeValueAsString(expectedResponse));
     }
 
+    @Test
+    void givenInvalidAccessRequest_whenPostAccess_shouldReturn401Response() throws Exception {
+        final AccessRequest request = AccessRequestFactory.accessRequest();
+
+        final UnauthorizedException exception = new UnauthorizedException(
+                randomText()
+        );
+
+        when(authService.access(accessMapper.requestToDto(request)))
+                .thenThrow(exception);
+
+        final ResultActions result = mockMvc.perform(
+                MockMvcRequestBuilders
+                        .post(POST_ACCESS_URL)
+                        .content(new ObjectMapper().writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isUnauthorized());
+    }
 }
