@@ -49,6 +49,9 @@ class AuthControllerTest {
     private AuthService authService;
 
     private final AccessMapper accessMapper = AccessMapper.INSTANCE;
+    
+    public static final String POST_ACCESS_URL = AuthController.CONTROLLER_PATH
+                                                 + AuthController.POST_ACCESS_SUB_PATH;
 
     @Test
     void givenValidAccessRequest_whenGetAccessToken_shouldReturn200Response() throws Exception {
@@ -64,11 +67,7 @@ class AuthControllerTest {
 
         final ResultActions result = mockMvc.perform(
                 MockMvcRequestBuilders
-                        .post(String.format(
-                                "%s%s",
-                                AuthController.CONTROLLER_PATH,
-                                AuthController.POST_ACCESS_SUB_PATH
-                        ))
+                        .post(POST_ACCESS_URL)
                         .content(new ObjectMapper().writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
         );
