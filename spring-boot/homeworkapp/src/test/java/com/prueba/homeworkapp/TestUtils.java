@@ -51,7 +51,7 @@ public class TestUtils {
     }
 
     public static float randomFloat(final float min, final float max) {
-        return new Random().nextFloat((max - min) + 1.0f) + min;
+        return new Random().nextFloat(max - min) + min;
     }
 
     public static double randomDouble() {
