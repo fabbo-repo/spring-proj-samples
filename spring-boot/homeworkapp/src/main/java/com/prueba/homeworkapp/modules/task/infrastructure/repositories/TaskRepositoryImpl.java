@@ -80,7 +80,7 @@ public class TaskRepositoryImpl implements TaskRepository {
         );
         final Page<TaskJpaEntity> taskPage = taskJpaRepository
                 .findAll(pageable);
-        return pageMapper.enityToDto(taskPage);
+        return pageMapper.entityToDto(taskPage);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class TaskRepositoryImpl implements TaskRepository {
         );
         final Page<TaskJpaEntity> taskPage = taskJpaRepository
                 .findAllByTaskStatus(taskStatus, pageable);
-        return pageMapper.enityToDto(taskPage);
+        return pageMapper.entityToDto(taskPage);
     }
 
     @Override
@@ -182,6 +182,6 @@ public class TaskRepositoryImpl implements TaskRepository {
         );
         final Page<TaskJpaEntity> taskPage = taskJpaRepository
                 .findAll(specification, pageable);
-        return pageMapper.enityToDto(taskPage);
+        return pageMapper.entityToDto(taskPage);
     }
 }

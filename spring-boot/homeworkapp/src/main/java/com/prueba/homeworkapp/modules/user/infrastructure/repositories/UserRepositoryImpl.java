@@ -75,7 +75,7 @@ public class UserRepositoryImpl implements UserRepository {
         final Page<User> userPage = userJpaRepository
                 .findAll(pageable)
                 .map(userMapper::entityToDto);
-        return pageMapper.enityToDto(userPage);
+        return pageMapper.entityToDto(userPage);
     }
 
     @Override
