@@ -59,7 +59,7 @@ public class TestUtils {
     }
 
     public static double randomDouble(final double min, final double max) {
-        return new Random().nextDouble((max - min) + 1.0) + min;
+        return new Random().nextDouble(max - min) + min;
     }
 
     public static String randomText() {
