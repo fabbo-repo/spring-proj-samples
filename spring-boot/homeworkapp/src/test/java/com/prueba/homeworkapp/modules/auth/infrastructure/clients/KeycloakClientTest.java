@@ -26,7 +26,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
+import java.util.Collections;
 
 import static com.prueba.homeworkapp.TestUtils.randomEmail;
 import static com.prueba.homeworkapp.TestUtils.randomJwt;
@@ -68,9 +68,9 @@ class KeycloakClientTest {
     @Autowired
     private KeycloakClient keycloakClient;
 
-    private static String testEmail = "test@test.com";
+    private static String testEmail = "test@mail.com";
 
-    private static String testPassword = "test";
+    private static String testPassword = "testPassword";
 
     @BeforeAll
     static void createTestUser() {
@@ -84,7 +84,7 @@ class KeycloakClientTest {
         userRepresentation.setUsername(testEmail);
         userRepresentation.setEnabled(true);
         userRepresentation.setEmailVerified(true);
-        userRepresentation.setCredentials(List.of(credentialRepresentation));
+        userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
 
         keycloakContainer.getKeycloakAdminClient()
                          .realm("test-realm")

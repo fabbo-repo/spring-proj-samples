@@ -28,10 +28,10 @@
   "enabled": true,
   "sslRequired": "external",
   "registrationAllowed": false,
-  "registrationEmailAsUsername": true,
+  "registrationEmailAsUsername": false,
   "rememberMe": false,
-  "verifyEmail": true,
-  "loginWithEmailAllowed": true,
+  "verifyEmail": false,
+  "loginWithEmailAllowed": false,
   "duplicateEmailsAllowed": false,
   "resetPasswordAllowed": false,
   "editUsernameAllowed": false,
@@ -423,9 +423,9 @@
   "otpPolicyPeriod": 30,
   "otpPolicyCodeReusable": false,
   "otpSupportedApplications": [
-    "totpAppGoogleName",
     "totpAppFreeOTPName",
-    "totpAppMicrosoftAuthenticatorName"
+    "totpAppMicrosoftAuthenticatorName",
+    "totpAppGoogleName"
   ],
   "webAuthnPolicyRpEntityName": "keycloak",
   "webAuthnPolicySignatureAlgorithms": [
@@ -465,6 +465,11 @@
       "realmRoles": [
         "default-roles-test-realm"
       ],
+      "clientRoles": {
+        "realm-management": [
+          "manage-users"
+        ]
+      },
       "notBefore": 0,
       "groups": []
     }
@@ -1408,14 +1413,6 @@
   "components": {
     "org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy": [
       {
-        "id": "f0fb0902-3686-41d6-a9f0-7802fd44d0e4",
-        "name": "Consent Required",
-        "providerId": "consent-required",
-        "subType": "anonymous",
-        "subComponents": {},
-        "config": {}
-      },
-      {
         "id": "3686d362-3d51-4f7f-a1ef-50394b9b72ad",
         "name": "Trusted Hosts",
         "providerId": "trusted-hosts",
@@ -1429,6 +1426,45 @@
             "true"
           ]
         }
+      },
+      {
+        "id": "4a07662f-de8e-4f51-a694-569fcb8aae4b",
+        "name": "Allowed Client Scopes",
+        "providerId": "allowed-client-templates",
+        "subType": "authenticated",
+        "subComponents": {},
+        "config": {
+          "allow-default-scopes": [
+            "true"
+          ]
+        }
+      },
+      {
+        "id": "36a8473c-b656-40ed-8f42-a7f18ccc2962",
+        "name": "Allowed Protocol Mapper Types",
+        "providerId": "allowed-protocol-mappers",
+        "subType": "anonymous",
+        "subComponents": {},
+        "config": {
+          "allowed-protocol-mapper-types": [
+            "oidc-full-name-mapper",
+            "saml-user-property-mapper",
+            "oidc-usermodel-property-mapper",
+            "saml-role-list-mapper",
+            "oidc-address-mapper",
+            "saml-user-attribute-mapper",
+            "oidc-usermodel-attribute-mapper",
+            "oidc-sha256-pairwise-sub-mapper"
+          ]
+        }
+      },
+      {
+        "id": "f0fb0902-3686-41d6-a9f0-7802fd44d0e4",
+        "name": "Consent Required",
+        "providerId": "consent-required",
+        "subType": "anonymous",
+        "subComponents": {},
+        "config": {}
       },
       {
         "id": "3f30d0ed-b59d-4c08-987e-aaa5a298cee1",
@@ -1462,18 +1498,6 @@
         }
       },
       {
-        "id": "4a07662f-de8e-4f51-a694-569fcb8aae4b",
-        "name": "Allowed Client Scopes",
-        "providerId": "allowed-client-templates",
-        "subType": "authenticated",
-        "subComponents": {},
-        "config": {
-          "allow-default-scopes": [
-            "true"
-          ]
-        }
-      },
-      {
         "id": "23a945ea-f81c-4f66-8da7-30230c7dfe79",
         "name": "Max Clients Limit",
         "providerId": "max-clients",
@@ -1492,32 +1516,21 @@
         "subType": "anonymous",
         "subComponents": {},
         "config": {}
-      },
+      }
+    ],
+    "org.keycloak.userprofile.UserProfileProvider": [
       {
-        "id": "36a8473c-b656-40ed-8f42-a7f18ccc2962",
-        "name": "Allowed Protocol Mapper Types",
-        "providerId": "allowed-protocol-mappers",
-        "subType": "anonymous",
+        "id": "7b948b55-e145-430a-9f77-bd6567f4680b",
+        "providerId": "declarative-user-profile",
         "subComponents": {},
-        "config": {
-          "allowed-protocol-mapper-types": [
-            "oidc-full-name-mapper",
-            "saml-user-property-mapper",
-            "oidc-usermodel-property-mapper",
-            "saml-role-list-mapper",
-            "oidc-address-mapper",
-            "saml-user-attribute-mapper",
-            "oidc-usermodel-attribute-mapper",
-            "oidc-sha256-pairwise-sub-mapper"
-          ]
-        }
+        "config": {}
       }
     ],
     "org.keycloak.keys.KeyProvider": [
       {
-        "id": "adefb907-a9b1-4b1a-9f21-233d0f796796",
-        "name": "aes-generated",
-        "providerId": "aes-generated",
+        "id": "a0ef80c5-b365-4e6c-96ab-767a6e94a909",
+        "name": "rsa-generated",
+        "providerId": "rsa-generated",
         "subComponents": {},
         "config": {
           "priority": [
@@ -1526,9 +1539,9 @@
         }
       },
       {
-        "id": "a0ef80c5-b365-4e6c-96ab-767a6e94a909",
-        "name": "rsa-generated",
-        "providerId": "rsa-generated",
+        "id": "adefb907-a9b1-4b1a-9f21-233d0f796796",
+        "name": "aes-generated",
+        "providerId": "aes-generated",
         "subComponents": {},
         "config": {
           "priority": [
