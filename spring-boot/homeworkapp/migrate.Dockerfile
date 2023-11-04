@@ -1,12 +1,9 @@
-FROM docker.io/maven:3.8.6-eclipse-temurin-17 as build
+FROM docker.io/eclipse-temurin:17-jdk-alpine
+
+ENV SPRING_PROFILES_ACTIVE=prod
 
 WORKDIR /app
 
-COPY pom.xml .
+COPY ./target/homeworkapp.jar /app
 
-RUN mvn dependency:go-offline
-
-COPY flyway.conf .
-COPY ./src /app/src
-
-ENTRYPOINT ["mvn", "flyway:migrate"]
+ENTRYPOINT ["java", "-cp", "homeworkapp.jar", "-Dloader.main=com.prueba.flyway.FlywayMigrationRunner", "org.springframework.boot.loader.PropertiesLauncher"]
