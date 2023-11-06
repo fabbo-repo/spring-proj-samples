@@ -4,7 +4,7 @@ package com.prueba.homeworkapp.modules.task.infrastructure.repositories;
 import com.prueba.homeworkapp.HomeworkappApplication;
 import com.prueba.homeworkapp.ReplaceUnderscoresAndCamelCase;
 import com.prueba.homeworkapp.annotations.EnabledIfDocker;
-import com.prueba.homeworkapp.containers.MockPostgreSqlContainer;
+import com.prueba.homeworkapp.containers.IntegrationContainerTests;
 import com.prueba.homeworkapp.modules.task.domain.models.entities.TaskJpaEntity;
 import com.prueba.homeworkapp.modules.task.domain.models.entities.TaskJpaEntityFactory;
 import com.prueba.homeworkapp.modules.task.domain.repositories.TaskRepository;
@@ -14,11 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.ArrayList;
@@ -34,17 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Testcontainers
 @EnabledIfDocker
 @ActiveProfiles(HomeworkappApplication.INT_TEST_PROFILE)
-class TaskRepositoryTest {
-    @Container
-    private static final PostgreSQLContainer<?> postgreSqlContainer = MockPostgreSqlContainer.getInstance();
-
-    @DynamicPropertySource
-    static void registerSettings(DynamicPropertyRegistry registry) {
-        registry.add(
-                "spring.datasource.url",
-                postgreSqlContainer::getJdbcUrl
-        );
-    }
+class TaskRepositoryTest extends IntegrationContainerTests {
 
     @Autowired
     private TaskRepository taskRepository;

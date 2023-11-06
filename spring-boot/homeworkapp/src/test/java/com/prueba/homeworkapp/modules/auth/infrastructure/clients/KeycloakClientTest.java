@@ -5,11 +5,9 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.prueba.homeworkapp.HomeworkappApplication;
 import com.prueba.homeworkapp.ReplaceUnderscoresAndCamelCase;
 import com.prueba.homeworkapp.annotations.EnabledIfDocker;
-import com.prueba.homeworkapp.containers.MockKeycloakContainer;
-import com.prueba.homeworkapp.containers.MockPostgreSqlContainer;
+import com.prueba.homeworkapp.containers.IntegrationContainerTests;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Jwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.exceptions.UnauthorizedException;
-import dasniko.testcontainers.keycloak.ExtendableKeycloakContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -18,10 +16,6 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
@@ -41,29 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Testcontainers
 @EnabledIfDocker
 @ActiveProfiles(HomeworkappApplication.INT_TEST_PROFILE)
-class KeycloakClientTest {
-
-    @Container
-    private static final PostgreSQLContainer<?> postgreSqlContainer = MockPostgreSqlContainer.getInstance();
-
-    @Container
-    private static final ExtendableKeycloakContainer<?> keycloakContainer = MockKeycloakContainer.getInstance();
-
-    @DynamicPropertySource
-    static void registerSettings(DynamicPropertyRegistry registry) {
-        registry.add(
-                "spring.datasource.url",
-                postgreSqlContainer::getJdbcUrl
-        );
-        registry.add(
-                "spring.security.oauth2.resourceserver.jwt.jwk-set-uri",
-                () -> keycloakContainer.getAuthServerUrl() + "/realms/test-realm/protocol/openid-connect/certs"
-        );
-        registry.add(
-                "api.keycloak.server-url",
-                keycloakContainer::getAuthServerUrl
-        );
-    }
+class KeycloakClientTest extends IntegrationContainerTests {
 
     @Autowired
     private KeycloakClient keycloakClient;

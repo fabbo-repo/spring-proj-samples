@@ -24,4 +24,14 @@ public class MockPostgreSqlContainer extends PostgreSQLContainer<MockPostgreSqlC
         }
         return container;
     }
+
+    @Override
+    public void start() {
+        super.start();
+    }
+
+    @Override
+    public void stop() {
+        // Do nothing, JVM handles shut down
+    }
 }
