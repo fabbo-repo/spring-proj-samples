@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+
+  ean-api-db:
+    image: postgres:14.1-alpine
+    container_name: ean-api-db
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=ean-api-db
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - ean-api-db-volume:/var/lib/postgresql/data
+
+  ean-api-pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: ean-api-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=admin1234
+    ports:
+      - "9050:80"
+    depends_on:
+      - ean-api-db
+    volumes:
+      - ean-api-pgadmin-volume:/var/lib/pgadmin
+    restart: unless-stopped
+
+volumes:
+  ean-api-pgadmin-volume:
+  ean-api-db-volume:

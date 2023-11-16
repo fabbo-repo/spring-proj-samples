@@ -1,0 +1,8 @@
+api:
+  pagination:
+    page-size: 10
+  keycloak:
+    server-url: http://localhost:8180
+    realm: test-realm
+    client-id: test-client
+    secret: test-secret

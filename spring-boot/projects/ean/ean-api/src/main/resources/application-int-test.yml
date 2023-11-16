@@ -1,0 +1,40 @@
+spring:
+  config:
+    import: optional:file:api.env[.properties]
+  datasource:
+    initialization-mode: always
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/ean-api-test-db
+    username: postgres
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8180/realms/test-realm/protocol/openid-connect/certs
+  flyway:
+    enabled: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+api:
+  pagination:
+    page-size: 10
+  cors:
+    allowed-origin-patterns: "*"
+    allowed-methods: GET,POST,PATCH,PUT,DELETE,OPTIONS,HEAD
+    allowed-headers: Authorization,Content-Type
+    allow-credentials: true
+  keycloak:
+    server-url: http://localhost:8180
+    realm: test-realm
+    client-id: test-client
+    secret: test-secret

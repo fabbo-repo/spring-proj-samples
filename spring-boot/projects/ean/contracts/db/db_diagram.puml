@@ -1,0 +1,41 @@
+@startuml diagram
+
+package Postgres <<Database>> {
+
+    class product {
+        id : SERIAL
+        name : VARCHAR_20
+        description : VARCHAR_200
+        price : DOUBLE
+        stock : BIGINT
+        ean_value : INTEGER
+        product_provider_id : SERIAL
+    }
+
+    class product_delivery {
+        id : SERIAL
+        quantity : BIGINT
+        product_id : SERIAL
+        product_destiny_id : SERIAL
+    }
+
+    class product_destiny {
+        id : SERIAL
+        min_ean_value : INTEGER
+        max_ean_value : INTEGER
+        address : VARCHAR_200
+        destiny_type : VARCHAR_30
+    }
+
+    class product_provider {
+        id : SERIAL
+        provider_type : VARCHAR_30
+        ean_value : INTEGER
+    }
+
+    product "1..1" -- "0..*" product_delivery
+    product_destiny "1..1" -- "0..*" product_delivery
+    product "0..*" -- "1..1*" product_provider
+}
+
+@enduml
