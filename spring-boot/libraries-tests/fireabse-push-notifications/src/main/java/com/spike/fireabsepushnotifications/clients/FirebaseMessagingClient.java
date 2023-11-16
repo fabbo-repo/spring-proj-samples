@@ -6,6 +6,7 @@ import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Component
 public class FirebaseMessagingClient implements MessagingClient {
 
     private final FirebaseMessaging firebaseMessaging;
