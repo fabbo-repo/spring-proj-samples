@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-boot.version>3.2.0</spring-boot.version>
+		<mongock.version>5.3.5</mongock.version>
 		<lombok.version>1.18.28</lombok.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 		<swagger.version>2.1.0</swagger.version>
@@ -72,6 +73,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 			<version>3.2.0</version>
+		</dependency>
+
+		<!-- Migrations -->
+
+		<!-- https://mvnrepository.com/artifact/io.mongock/mongock-springboot-v3 -->
+		<dependency>
+			<groupId>io.mongock</groupId>
+			<artifactId>mongock-springboot-v3</artifactId>
+			<version>${mongock.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.mongock/mongodb-springdata-v4-driver -->
+		<dependency>
+			<groupId>io.mongock</groupId>
+			<artifactId>mongodb-springdata-v4-driver</artifactId>
+			<version>${mongock.version}</version>
 		</dependency>
 
 		<!-- Testing -->

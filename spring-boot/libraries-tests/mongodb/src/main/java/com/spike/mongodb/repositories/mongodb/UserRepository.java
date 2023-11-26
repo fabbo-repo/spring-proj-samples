@@ -36,14 +36,14 @@ public class UserRepository {
         if (name != null) {
             query.addCriteria(
                     Criteria
-                            .where(UserCollectionEntity.NAME_COLUMN_NAME)
+                            .where(UserCollectionEntity.NAME_FIELD_NAME)
                             .is(name)
             );
         }
         if (age != null) {
             query.addCriteria(
                     Criteria
-                            .where(UserCollectionEntity.AGE_COLUMN_NAME)
+                            .where(UserCollectionEntity.AGE_FIELD_NAME)
                             .is(age)
             );
         }

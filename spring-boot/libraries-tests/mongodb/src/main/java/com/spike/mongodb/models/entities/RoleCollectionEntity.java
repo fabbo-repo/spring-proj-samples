@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldName;
@@ -16,13 +17,14 @@ import org.springframework.data.mongodb.core.mapping.FieldName;
 public class RoleCollectionEntity extends AuditableCollectionEntity {
     public static final String COLLECTION_NAME = "rolesCollection";
 
-    public static final String ROLE_TYPE_COLUMN_NAME = "roleType";
+    public static final String ROLE_TYPE_FIELD_NAME = "roleType";
 
     @Id
     private String id;
 
+    @Indexed(unique = true)
     @Field(
-            name = ROLE_TYPE_COLUMN_NAME,
+            name = ROLE_TYPE_FIELD_NAME,
             nameType = FieldName.Type.KEY
     )
     private RoleTypeEnum type;

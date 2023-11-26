@@ -10,5 +10,11 @@ spring:
   data:
     mongodb:
       database: "spike"
-      auto-index-creation: true
+      auto-index-creation: false
       uri: "mongodb://admin:password@localhost:27017/"
+
+mongock:
+  migration-scan-package: com.spike.mongodb.changelogs
+  transaction-enabled: false
+  enabled: true
+  track-ignored: false

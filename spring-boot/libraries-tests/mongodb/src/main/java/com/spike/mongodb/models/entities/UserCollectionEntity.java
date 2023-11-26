@@ -17,21 +17,21 @@ import java.util.List;
 public class UserCollectionEntity extends AuditableCollectionEntity {
     public static final String COLLECTION_NAME = "usersCollection";
 
-    public static final String NAME_COLUMN_NAME = "name";
-    public static final String AGE_COLUMN_NAME = "age";
-    public static final String ROLES_COLUMN_NAME = "role_list";
+    public static final String NAME_FIELD_NAME = "name";
+    public static final String AGE_FIELD_NAME = "age";
+    public static final String ROLES_FIELD_NAME = "role_list";
 
     @Id
     private String id;
 
     @Indexed(unique = true)
-    @Field(name = NAME_COLUMN_NAME, nameType = FieldName.Type.KEY)
+    @Field(name = NAME_FIELD_NAME, nameType = FieldName.Type.KEY)
     private String name;
 
-    @Field(name = AGE_COLUMN_NAME, nameType = FieldName.Type.KEY)
+    @Field(name = AGE_FIELD_NAME, nameType = FieldName.Type.KEY)
     private Integer age;
 
     @DBRef
-    @Field(name = ROLES_COLUMN_NAME, nameType = FieldName.Type.KEY)
+    @Field(name = ROLES_FIELD_NAME, nameType = FieldName.Type.KEY)
     private List<RoleCollectionEntity> roles;
 }
