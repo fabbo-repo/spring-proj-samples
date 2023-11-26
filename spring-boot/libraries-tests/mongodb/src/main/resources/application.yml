@@ -1,0 +1,14 @@
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
+spring:
+  data:
+    mongodb:
+      database: "spike"
+      auto-index-creation: true
+      uri: "mongodb://admin:password@localhost:27017/"
