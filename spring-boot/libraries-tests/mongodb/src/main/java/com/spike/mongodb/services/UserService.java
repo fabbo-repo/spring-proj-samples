@@ -34,17 +34,16 @@ public class UserService {
         final UserCollectionEntity entity = userMapper.requestToEntity(request);
         entity.setRoles(
                 request.roles().stream().map(
-                        (roleTypeEnum) ->
-                                roleRepository
-                                        .findByType(roleTypeEnum)
-                                        .orElse(
-                                                roleRepository.save(
-                                                        RoleCollectionEntity
-                                                                .builder()
-                                                                .type(roleTypeEnum)
-                                                                .build()
-                                                )
+                        (roleTypeEnum) -> roleRepository
+                                .findByType(roleTypeEnum)
+                                .orElseGet(
+                                        () -> roleRepository.save(
+                                                RoleCollectionEntity
+                                                        .builder()
+                                                        .type(roleTypeEnum)
+                                                        .build()
                                         )
+                                )
                 ).toList()
         );
         final UserCollectionEntity savedEntity = userRepository.save(entity);

@@ -3,11 +3,9 @@ package com.spike.mongodb.repositories.mongodb;
 import com.spike.mongodb.models.entities.RoleCollectionEntity;
 import com.spike.mongodb.models.enums.RoleTypeEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,8 +20,8 @@ public class RoleRepository {
     }
 
     public Optional<RoleCollectionEntity> findByType(final RoleTypeEnum roleTypeEnum) {
-        return roleMongodbRepository
-                .findByType(roleTypeEnum)
-                .stream().findFirst();
+        final List<RoleCollectionEntity> entityList = roleMongodbRepository
+                .findByType(roleTypeEnum);
+        return entityList.stream().findFirst();
     }
 }
