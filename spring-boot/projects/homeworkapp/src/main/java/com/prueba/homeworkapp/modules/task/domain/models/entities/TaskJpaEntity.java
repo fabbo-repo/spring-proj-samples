@@ -46,18 +46,13 @@ public class TaskJpaEntity extends Auditable<String> {
     @Column(name = ID_COL)
     private UUID id;
 
-    @NotBlank
-    @Size(min = 3, max = 30)
-    @Column(name = TITLE_COL)
+    @Column(name = TITLE_COL, nullable = false)
     private String title;
 
-    @NotNull
-    @Size(max = 500)
-    @Column(name = DESCRIPTION_COL)
+    @Column(name = DESCRIPTION_COL, nullable = false)
     private String description;
 
-    @NotNull
-    @Column(name = ESTIMATED_DONE_AT_COL)
+    @Column(name = ESTIMATED_DONE_AT_COL, nullable = false)
     private LocalDateTime estimatedDoneAt;
 
     @Column(name = FINISHED_AT_COL)
@@ -66,8 +61,7 @@ public class TaskJpaEntity extends Auditable<String> {
     @Column(name = FINISHED_COL)
     private boolean finished;
 
-    @NotNull
-    @Column(name = TASK_STATUS_COL)
+    @Column(name = TASK_STATUS_COL, nullable = false)
     @Enumerated(EnumType.STRING)
     private TaskStatusEnum taskStatus;
 }

@@ -41,28 +41,18 @@ public class UserJpaEntity extends Auditable<String> {
     @Column(name = ID_COL)
     private UUID id;
 
-    @NotBlank
-    @Size(max = 30)
-    @Column(name = USERNAME_COL)
+    @Column(name = USERNAME_COL, nullable = false)
     private String username;
 
-    @NotNull
-    @Email
-    @Column(name = EMAIL_COL)
+    @Column(name = EMAIL_COL, nullable = false)
     private String email;
 
-    @NotNull
-    @Size(max = 50)
-    @Column(name = FIRST_NAME_COL)
+    @Column(name = FIRST_NAME_COL, nullable = false)
     private String firstName;
 
-    @NotNull
-    @Size(max = 50)
-    @Column(name = LAST_NAME_COL)
+    @Column(name = LAST_NAME_COL, nullable = false)
     private String lastName;
 
-    @Min(0)
-    @Max(200)
     @Column(name = AGE_COL)
     private Integer age;
 }
