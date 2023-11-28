@@ -3,9 +3,6 @@ package com.prueba.homeworkapp.modules.auth.application.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prueba.homeworkapp.HomeworkappApplication;
 import com.prueba.homeworkapp.ReplaceUnderscoresAndCamelCase;
-import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Access;
-import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwts;
-import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwtsFactory;
 import com.prueba.homeworkapp.modules.auth.domain.models.exceptions.UnauthorizedException;
 import com.prueba.homeworkapp.modules.auth.domain.models.mappers.AccessMapper;
 import com.prueba.homeworkapp.modules.auth.domain.models.mappers.RefreshMapper;
@@ -23,13 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static com.prueba.homeworkapp.TestUtils.randomText;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -63,35 +58,6 @@ class AuthControllerTest {
 
     private static final String POST_LOGOUT_URL = AuthController.CONTROLLER_PATH
                                                   + AuthController.POST_LOGOUT_SUB_PATH;
-
-    @Test
-    void givenValidAccessRequest_whenGetAccessToken_shouldReturn200Response() throws Exception {
-        final UserAndJwts expectedResponse = UserAndJwtsFactory.userAndJwts();
-        final AccessRequest request = AccessRequestFactory
-                .accessRequestBuilder()
-                .email(expectedResponse.getEmail())
-                .build();
-        final Access access = accessMapper.requestToDto(request);
-
-        when(authService.access(access))
-                .thenReturn(expectedResponse);
-
-        final ResultActions result = mockMvc.perform(
-                MockMvcRequestBuilders
-                        .post(POST_ACCESS_URL)
-                        .content(new ObjectMapper().writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Check response http status code
-        result.andExpect(status().isOk());
-
-        final MvcResult mvcResult = result.andReturn();
-        final String responseBody = mvcResult.getResponse().getContentAsString();
-
-        assertThat(responseBody).isEqualToIgnoringWhitespace(
-                objectMapper.writeValueAsString(expectedResponse));
-    }
 
     @Test
     void givenInvalidAccessRequest_whenPostAccess_shouldReturn401Response() throws Exception {

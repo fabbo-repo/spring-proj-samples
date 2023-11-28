@@ -3,7 +3,6 @@ package com.prueba.homeworkapp.modules.auth.application.controllers;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Access;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Jwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Refresh;
-import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.mappers.AccessMapper;
 import com.prueba.homeworkapp.modules.auth.domain.models.mappers.RefreshMapper;
 import com.prueba.homeworkapp.modules.auth.domain.models.requests.AccessRequest;
@@ -57,21 +56,21 @@ public class AuthController {
     private final RefreshMapper refreshMapper = RefreshMapper.INSTANCE;
 
     @PostMapping(POST_ACCESS_SUB_PATH)
-    public ResponseEntity<UserAndJwts> getAccessToken(
+    public ResponseEntity<Jwts> getAccessToken(
             @RequestBody @Valid AccessRequest accessRequest
     ) {
         final Access access = accessMapper.requestToDto(accessRequest);
-        final UserAndJwts userAndJwts = authService.access(access);
+        final Jwts jwts = authService.access(access);
         return ResponseEntity
                 .ok()
                 .header(
                         HttpHeaders.SET_COOKIE,
                         refreshTokenCookie(
-                                userAndJwts.getRefreshToken(),
-                                userAndJwts.getRefreshExpiresIn()
+                                jwts.getRefreshToken(),
+                                jwts.getRefreshExpiresIn()
                         )
                 )
-                .body(userAndJwts);
+                .body(jwts);
     }
 
     @PostMapping(POST_REFRESH_SUB_PATH)

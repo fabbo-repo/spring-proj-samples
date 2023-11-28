@@ -1,21 +1,13 @@
 package com.prueba.homeworkapp.modules.auth.domain.services;
 
-import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.prueba.homeworkapp.modules.auth.domain.clients.AuthAdminClient;
 import com.prueba.homeworkapp.modules.auth.domain.clients.AuthClient;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Access;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Jwts;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Refresh;
-import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwts;
-import com.prueba.homeworkapp.modules.auth.domain.models.mappers.AccessMapper;
-import com.prueba.homeworkapp.modules.auth.domain.models.mappers.RegisterMapper;
-import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
-import com.prueba.homeworkapp.modules.user.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -26,37 +18,12 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthAdminClient authAdminClient;
 
-    private final UserRepository userRepository;
-
-    private final RegisterMapper registerMapper = RegisterMapper.INSTANCE;
-
-    private final AccessMapper accessMapper = AccessMapper.INSTANCE;
-
     @Override
-    public UserAndJwts access(final Access access) {
-        final Jwts jwts = authClient.access(
+    public Jwts access(final Access access) {
+        return authClient.access(
                 access.getEmail(),
                 access.getPassword()
         );
-        final JsonObject decodedAccessToken = authClient.decodeToken(
-                jwts.getAccessToken()
-        );
-        final UUID userId = UUID.fromString(
-                decodedAccessToken.get("sub").getAsString()
-        );
-        final User user = userRepository.findById(
-                userId,
-                () -> userRepository.save(
-                        User.builder()
-                            .id(userId)
-                            .email(access.getEmail())
-                            .username(access.getEmail().split("@")[0])
-                            .firstName("")
-                            .lastName("")
-                            .build()
-                )
-        );
-        return accessMapper.userAndJwtsToDto(user, jwts);
     }
 
     @Override

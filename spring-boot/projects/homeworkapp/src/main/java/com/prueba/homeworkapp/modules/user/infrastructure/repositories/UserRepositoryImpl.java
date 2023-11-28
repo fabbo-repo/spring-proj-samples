@@ -1,9 +1,7 @@
 package com.prueba.homeworkapp.modules.user.infrastructure.repositories;
 
 import com.prueba.homeworkapp.core.models.dtos.PageDto;
-import com.prueba.homeworkapp.core.models.exceptions.EntityNotFoundException;
 import com.prueba.homeworkapp.core.models.mapper.PageMapper;
-import com.prueba.homeworkapp.modules.task.domain.models.entities.TaskJpaEntity;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 import com.prueba.homeworkapp.modules.user.domain.models.mappers.UserMapper;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 
 @Repository
@@ -43,26 +40,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findById(final UUID id) {
-        final UserJpaEntity userJpaEntity = userJpaRepository
-                .findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(
-                                TaskJpaEntity.TABLE_NAME,
-                                TaskJpaEntity.ID_COL,
-                                id
-                        )
-                );
-        return userMapper.entityToDto(userJpaEntity);
-    }
-
-    @Override
-    public User findById(final UUID id, final Supplier<User> orElse) {
-        final Optional<UserJpaEntity> userJpaEntity = userJpaRepository.findById(id);
-        if (userJpaEntity.isPresent()) {
-            return userMapper.entityToDto(userJpaEntity.get());
-        }
-        return orElse.get();
+    public Optional<UserJpaEntity> findById(final UUID id) {
+        return userJpaRepository.findById(id);
     }
 
     @Override
@@ -84,12 +63,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User save(final User user) {
-        final UserJpaEntity userJpaEntity = userMapper.dtoToEntity(user);
-        userJpaEntity.setCreatedAt(user.getCreatedAt());
-        userJpaEntity.setCreatedBy(user.getCreatedBy());
-        return userMapper.entityToDto(
-                userJpaRepository.save(userJpaEntity)
-        );
+    public UserJpaEntity save(final UserJpaEntity userJpaEntity) {
+        userJpaEntity.setCreatedAt(userJpaEntity.getCreatedAt());
+        userJpaEntity.setCreatedBy(userJpaEntity.getCreatedBy());
+        return userJpaRepository.save(userJpaEntity);
     }
 }

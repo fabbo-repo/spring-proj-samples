@@ -1,6 +1,5 @@
 package com.prueba.homeworkapp.modules.auth.domain.clients;
 
-import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.prueba.homeworkapp.modules.auth.domain.models.dtos.Jwts;
 
 public interface AuthClient {
@@ -9,6 +8,4 @@ public interface AuthClient {
     Jwts refresh(String refreshToken);
 
     Void logout(String refreshToken);
-
-    JsonObject decodeToken(String token);
 }

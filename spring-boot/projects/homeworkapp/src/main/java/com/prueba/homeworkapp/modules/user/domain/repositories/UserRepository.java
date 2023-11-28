@@ -2,23 +2,19 @@ package com.prueba.homeworkapp.modules.user.domain.repositories;
 
 import com.prueba.homeworkapp.core.models.dtos.PageDto;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
+import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 
+import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public interface UserRepository {
     boolean existsById(final UUID id);
 
-    User findById(final UUID id);
-
-    /**
-     * @param orElse: supplier to execute in case User does not exists
-     */
-    User findById(UUID id, Supplier<User> orElse);
+    Optional<UserJpaEntity> findById(final UUID id);
 
     PageDto<User> findAll(final int pageNum);
 
     void deleteById(final UUID id);
 
-    User save(final User user);
+    UserJpaEntity save(final UserJpaEntity userJpaEntity);
 }

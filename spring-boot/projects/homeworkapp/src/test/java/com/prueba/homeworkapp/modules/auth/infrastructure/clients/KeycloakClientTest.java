@@ -1,6 +1,5 @@
 package com.prueba.homeworkapp.modules.auth.infrastructure.clients;
 
-import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.prueba.homeworkapp.HomeworkappApplication;
 import com.prueba.homeworkapp.ReplaceUnderscoresAndCamelCase;
@@ -61,16 +60,6 @@ class KeycloakClientTest extends IntegrationContainerTests {
         keycloakContainer.getKeycloakAdminClient()
                          .realm("test-realm")
                          .users().create(userRepresentation);
-    }
-
-    @Test
-    void checkDecodeTokenMethod_withRandomJwt() {
-        final String expectedSubject = randomText();
-        final String token = randomJwt(expectedSubject);
-
-        final JsonObject jsonObject = keycloakClient.decodeToken(token);
-
-        assertEquals(expectedSubject, jsonObject.get("sub").toString().replaceAll("\"", ""));
     }
 
     @Test

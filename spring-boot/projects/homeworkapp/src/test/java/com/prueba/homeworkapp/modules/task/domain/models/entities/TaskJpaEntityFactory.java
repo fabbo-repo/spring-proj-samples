@@ -1,13 +1,10 @@
 package com.prueba.homeworkapp.modules.task.domain.models.entities;
 
-import com.prueba.homeworkapp.modules.auth.domain.models.dtos.UserAndJwts;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import static com.prueba.homeworkapp.TestUtils.randomBool;
-import static com.prueba.homeworkapp.TestUtils.randomEmail;
 import static com.prueba.homeworkapp.TestUtils.randomFutureDateTime;
-import static com.prueba.homeworkapp.TestUtils.randomInt;
 import static com.prueba.homeworkapp.TestUtils.randomPastDateTime;
 import static com.prueba.homeworkapp.TestUtils.randomStatusEnum;
 import static com.prueba.homeworkapp.TestUtils.randomText;

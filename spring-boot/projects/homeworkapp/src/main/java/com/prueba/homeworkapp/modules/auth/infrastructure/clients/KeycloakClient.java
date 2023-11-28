@@ -114,14 +114,6 @@ public class KeycloakClient implements AuthClient {
         }
     }
 
-    @Override
-    public JsonObject decodeToken(final String token) {
-        final String[] chunks = token.split("\\.");
-        final Base64.Decoder decoder = Base64.getUrlDecoder();
-        final String payload = new String(decoder.decode(chunks[1]), StandardCharsets.UTF_8);
-        return JsonParser.parseString(payload).getAsJsonObject();
-    }
-
     private Jwts tokenToJwts(final TokenResponse tokenResponse) {
         final Tokens tokens = tokenResponse.toSuccessResponse().getTokens();
         final AccessToken accessTokenObj = tokens.getAccessToken();
@@ -165,5 +157,12 @@ public class KeycloakClient implements AuthClient {
                 keycloakConfig.getClientAuth(),
                 keycloakConfig.getRefreshTokenGrant(refreshToken)
         ).toHTTPRequest().send());
+    }
+
+    private JsonObject decodeToken(final String token) {
+        final String[] chunks = token.split("\\.");
+        final Base64.Decoder decoder = Base64.getUrlDecoder();
+        final String payload = new String(decoder.decode(chunks[1]), StandardCharsets.UTF_8);
+        return JsonParser.parseString(payload).getAsJsonObject();
     }
 }
