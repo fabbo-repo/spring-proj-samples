@@ -14,7 +14,7 @@ import java.util.List;
 @Document(collection = UserCollectionEntity.COLLECTION_NAME)
 @Getter
 @Setter
-public class UserCollectionEntity extends AuditableCollectionEntity {
+public class UserCollectionEntity extends AuditableCollectionEntity<String> {
     public static final String COLLECTION_NAME = "usersCollection";
 
     public static final String NAME_FIELD_NAME = "name";

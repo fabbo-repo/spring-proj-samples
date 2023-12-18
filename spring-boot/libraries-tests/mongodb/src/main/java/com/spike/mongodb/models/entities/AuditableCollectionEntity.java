@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 @Getter
-public class AuditableCollectionEntity {
+public abstract class AuditableCollectionEntity<U> {
 
     public static final String CREATED_BY_FIELD_NAME = "createdBy";
     public static final String CREATED_DATE_FIELD_NAME = "createdDate";
@@ -19,7 +19,7 @@ public class AuditableCollectionEntity {
 
     @CreatedBy
     @Field(CREATED_BY_FIELD_NAME)
-    private String createdBy;
+    private U createdBy;
 
     @CreatedDate
     @Field(CREATED_DATE_FIELD_NAME)
@@ -27,7 +27,7 @@ public class AuditableCollectionEntity {
 
     @LastModifiedBy
     @Field(LAST_MODIFIED_BY_FIELD_NAME)
-    private String lastModifiedBy;
+    private U lastModifiedBy;
 
     @LastModifiedDate
     @Field(LAST_MODIFIED_DATE_FIELD_NAME)

@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 @Getter
 @Setter
 @Builder
-public class RoleCollectionEntity extends AuditableCollectionEntity {
+public class RoleCollectionEntity extends AuditableCollectionEntity<String> {
     public static final String COLLECTION_NAME = "rolesCollection";
 
     public static final String ROLE_TYPE_FIELD_NAME = "roleType";
