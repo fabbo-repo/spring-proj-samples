@@ -7,16 +7,16 @@ public class ChatGroup {
 
     private UUID id;
 
-    private String username;
+    private String groupName;
 
     private List<ChatUser> chatUsers;
 
     public ChatGroup() {
     }
 
-    public ChatGroup(UUID id, String username, List<ChatUser> chatUsers) {
+    public ChatGroup(UUID id, String groupName, List<ChatUser> chatUsers) {
         this.id = id;
-        this.username = username;
+        this.groupName = groupName;
         this.chatUsers = chatUsers;
     }
 
@@ -28,12 +28,12 @@ public class ChatGroup {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public List<ChatUser> getChatUsers() {
