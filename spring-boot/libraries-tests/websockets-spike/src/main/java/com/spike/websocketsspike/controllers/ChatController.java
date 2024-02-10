@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class ChatController {
@@ -20,21 +21,25 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
-    @SubscribeMapping("/connected.users")
-    public List<ChatUser> listChatRoomConnectedUsersOnSubscribe(final SimpMessageHeaderAccessor headerAccessor) {
+    private static final String CHAT_GROUP_SESSION_ATTRIBUTE = "chatGroupId";
 
+    @SubscribeMapping("/connected.users")
+    public List<ChatUser> listConnectedUsersSubscribe(final SimpMessageHeaderAccessor headerAccessor) {
         if (
                 headerAccessor
                         .getSessionAttributes() != null && headerAccessor
-                        .getSessionAttributes().containsKey("chatRoomId")
+                        .getSessionAttributes().containsKey(
+                                CHAT_GROUP_SESSION_ATTRIBUTE
+                        )
         ) {
-            final String chatRoomId = headerAccessor
+            final String chatGroupId = headerAccessor
                     .getSessionAttributes()
-                    .get("chatRoomId")
+                    .get(
+                            CHAT_GROUP_SESSION_ATTRIBUTE
+                    )
                     .toString();
             return chatService
-                    .findById(chatRoomId)
-                    .getConnectedUsers();
+                    .listConnectedUsers(UUID.fromString(chatGroupId));
         }
         return Collections.emptyList();
     }
@@ -44,8 +49,24 @@ public class ChatController {
             Principal principal,
             SimpMessageHeaderAccessor headerAccessor
     ) {
-        String chatRoomId = headerAccessor.getSessionAttributes().get("chatRoomId").toString();
-        return instantMessageService.findAllInstantMessagesFor(principal.getName(), chatRoomId);
+        if (
+                headerAccessor
+                        .getSessionAttributes() != null && headerAccessor
+                        .getSessionAttributes().containsKey(
+                                CHAT_GROUP_SESSION_ATTRIBUTE
+                        )
+        ) {
+            final String chatGroupId = headerAccessor
+                    .getSessionAttributes()
+                    .get(CHAT_GROUP_SESSION_ATTRIBUTE)
+                    .toString();
+            return chatService
+                    .listChatMessages(
+                            UUID.fromString(principal.getName()),
+                            UUID.fromString(chatGroupId)
+                    );
+        }
+        return Collections.emptyList();
     }
 
     @MessageMapping("/send-msg")
@@ -54,23 +75,12 @@ public class ChatController {
             Principal principal,
             SimpMessageHeaderAccessor headerAccessor
     ) {
-        if (
-                headerAccessor
-                        .getSessionAttributes() != null && headerAccessor
-                        .getSessionAttributes().containsKey("chatRoomId")
-        ) {
-            final String chatRoomId = headerAccessor
-                    .getSessionAttributes()
-                    .get("chatRoomId")
-                    .toString();
-            instantMessage.setFromUser(principal.getName());
-            instantMessage.setChatRoomId(chatRoomId);
+        chatMessage.setFromUser(UUID.fromString(principal.getName()));
 
-            if (instantMessage.isPublic()) {
-                chatRoomService.sendPublicMessage(instantMessage);
-            } else {
-                chatRoomService.sendPrivateMessage(instantMessage);
-            }
+        if (chatMessage.getToGroup() != null) {
+            chatService.sendPublicMessage(chatMessage);
+        } else {
+            chatService.sendPrivateMessage(chatMessage);
         }
     }
 }

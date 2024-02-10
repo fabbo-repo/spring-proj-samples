@@ -144,4 +144,46 @@ public class ChatService {
     public List<ChatGroup> listChatGroups() {
         return chatGroupList;
     }
+
+    public List<ChatMessage> listChatMessages(
+            final UUID userId,
+            final UUID chatGroupId
+    ) {
+        return chatMessageList
+                .stream()
+                .filter(
+                        chatMessage ->
+                                chatGroupId.equals(chatMessage.getToGroup())
+                                && chatGroupList.stream().anyMatch(
+                                        chatGroup -> chatGroup.getId().equals(chatGroupId)
+                                                     && chatGroup.getChatUsers().stream().anyMatch(
+                                                chatUser -> chatUser.getId().equals(userId)
+                                        )
+                                )
+                ).toList();
+    }
+
+    public List<ChatUser> listConnectedUsers(final UUID chatGroupId) {
+        return connectedUserList
+                .stream()
+                .filter(
+                        chatUser ->
+                                chatGroupList
+                                        .stream()
+                                        .anyMatch(chatGroup ->
+                                                          chatGroup
+                                                                  .getId()
+                                                                  .equals(chatGroupId)
+                                                          && chatGroup
+                                                                  .getChatUsers()
+                                                                  .stream()
+                                                                  .anyMatch(
+                                                                          groupUser -> groupUser
+                                                                                  .getId()
+                                                                                  .equals(chatUser.getId())
+                                                                  )
+                                        )
+                )
+                .toList();
+    }
 }
