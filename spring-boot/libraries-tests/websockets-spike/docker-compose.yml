@@ -6,7 +6,13 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=user
       - RABBITMQ_DEFAULT_PASS=password
+    volumes:
+      - rabbitmq-volume:/var/lib/rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
+      - "15674:15674"
       - "61613:61613"
+
+volumes:
+  rabbitmq-volume:
