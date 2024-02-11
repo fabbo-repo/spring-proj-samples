@@ -17,10 +17,7 @@ public class WebSocketHandshakeHandler implements HandshakeHandler {
             final WebSocketHandler wsHandler,
             final Map<String, Object> attributes
     ) throws HandshakeFailureException {
-        final Principal principal = request.getPrincipal();
-        if (principal == null || !principal.getName().equals("123")) {
-            throw new HandshakeFailureException("");
-        }
-        return false;
+        System.out.println("HOlaaaa");
+        return true;
     }
 }

@@ -1,5 +1,6 @@
 package com.spike.websocketsspike.config;
 
+import com.spike.websocketsspike.handlers.WebSocketHandshakeHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -25,20 +26,30 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                //.setHandshakeHandler()
+                .setAllowedOriginPatterns("*")
+                .setHandshakeHandler(new WebSocketHandshakeHandler())
                 .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(final MessageBrokerRegistry registry) {
-        registry.enableStompBrokerRelay("/queue/", "/topic/")
+        /*
+        registry.enableSimpleBroker(
+                "/queue/",
+                "/topic/"
+        );
+        registry.setUserDestinationPrefix("/topic/unresolved.user.dest");
+        */
+        registry.enableStompBrokerRelay(
+                        "/queue/",
+                        "/topic/"
+                )
                 .setUserDestinationBroadcast("/topic/unresolved.user.dest")
                 .setUserRegistryBroadcast("/topic/registry.broadcast")
                 .setRelayHost(brokerHost)
                 .setRelayPort(brokerPort)
                 .setSystemLogin(brokerUser)
                 .setSystemPasscode(brokerPassword);
-
         registry.setApplicationDestinationPrefixes("/chatGroup");
     }
 }
