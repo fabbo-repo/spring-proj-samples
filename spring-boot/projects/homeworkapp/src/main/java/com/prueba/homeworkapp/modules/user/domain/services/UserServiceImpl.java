@@ -2,8 +2,8 @@ package com.prueba.homeworkapp.modules.user.domain.services;
 
 import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.jose.shaded.gson.JsonParser;
-import com.prueba.homeworkapp.core.models.exceptions.EntityNotFoundException;
-import com.prueba.homeworkapp.modules.auth.infrastructure.clients.KeycloakAdminClient;
+import com.prueba.homeworkapp.commons.clients.keycloak.KeycloakAdminClient;
+import com.prueba.homeworkapp.commons.exceptions.EntityNotFoundException;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 import com.prueba.homeworkapp.modules.user.domain.models.mappers.UserMapper;
@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final KeycloakAdminClient keycloakAdminClient;
 
-    private final UserMapper userMapper = UserMapper.INSTANCE;
+    private static final UserMapper userMapper = UserMapper.INSTANCE;
 
     @Override
     public User getUser(UUID id) {
@@ -85,12 +85,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void patchUser(User user) {
-
+        // Unimplemented
     }
 
     @Override
     public void deleteUser(UUID id) {
-
+        // Unimplemented
     }
 
     private JsonObject decodeToken(final String token) {

@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.user.domain.repositories;
 
-import com.prueba.homeworkapp.core.models.dtos.PageDto;
+import com.prueba.homeworkapp.commons.models.ApiPage;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 
@@ -12,7 +12,7 @@ public interface UserRepository {
 
     Optional<UserJpaEntity> findById(final UUID id);
 
-    PageDto<User> findAll(final int pageNum);
+    ApiPage<User> findAll(final int pageNum);
 
     void deleteById(final UUID id);
 

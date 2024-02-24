@@ -14,18 +14,12 @@ spring:
         oauth2:
             resourceserver:
                 jwt:
+                    issuer-uri: http://localhost:8180
                     jwk-set-uri: http://localhost:8180/realms/test-realm/protocol/openid-connect/certs
     flyway:
         enabled: true
 
-server:
-    port: 8080
-    servlet:
-        context-path: /api/v1
-
 api:
-    pagination:
-        page-size: 10
     cors:
         allowed-origin-patterns: "*"
         allowed-methods: GET,POST,PATCH,PUT,DELETE,OPTIONS,HEAD

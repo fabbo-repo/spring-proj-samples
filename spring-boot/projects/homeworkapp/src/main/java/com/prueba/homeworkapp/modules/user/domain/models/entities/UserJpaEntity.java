@@ -1,16 +1,10 @@
 package com.prueba.homeworkapp.modules.user.domain.models.entities;
 
-import com.prueba.homeworkapp.core.models.entities.Auditable;
+import com.prueba.homeworkapp.commons.entities.Auditable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,15 +21,15 @@ import java.util.UUID;
 @Entity
 @Table(name = UserJpaEntity.TABLE_NAME)
 public class UserJpaEntity extends Auditable<String> {
-    public final static String TABLE_NAME = "app_user";
+    public static final String TABLE_NAME = "app_user";
 
-    public final static String SORT_FIELD = "createdAt";
-    public final static String ID_COL = "id";
-    public final static String USERNAME_COL = "username";
-    public final static String EMAIL_COL = "email";
-    public final static String FIRST_NAME_COL = "first_name";
-    public final static String LAST_NAME_COL = "last_name";
-    public final static String AGE_COL = "age";
+    public static final String SORT_FIELD = "createdAt";
+    public static final String ID_COL = "id";
+    public static final String USERNAME_COL = "username";
+    public static final String EMAIL_COL = "email";
+    public static final String FIRST_NAME_COL = "first_name";
+    public static final String LAST_NAME_COL = "last_name";
+    public static final String AGE_COL = "age";
 
     @Id
     @Column(name = ID_COL)
