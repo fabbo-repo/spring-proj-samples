@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp;
 
-import com.prueba.homeworkapp.commons.config.TimeZoneConfig;
+import com.prueba.homeworkapp.common.config.TimeZoneConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

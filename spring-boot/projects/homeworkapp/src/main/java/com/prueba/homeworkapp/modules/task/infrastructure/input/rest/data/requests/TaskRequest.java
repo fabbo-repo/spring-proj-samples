@@ -1,7 +1,7 @@
 package com.prueba.homeworkapp.modules.task.infrastructure.input.rest.data.requests;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.prueba.homeworkapp.commons.config.TimeZoneConfig;
+import com.prueba.homeworkapp.common.config.TimeZoneConfig;
 import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

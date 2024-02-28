@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.user.domain.repositories;
 
-import com.prueba.homeworkapp.commons.models.ApiPage;
+import com.prueba.homeworkapp.common.models.ApiPage;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 

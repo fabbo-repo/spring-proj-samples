@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.task.application.repositories;
 
-import com.prueba.homeworkapp.commons.models.ApiPage;
+import com.prueba.homeworkapp.common.models.ApiPage;
 import com.prueba.homeworkapp.modules.task.domain.models.Task;
 import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 

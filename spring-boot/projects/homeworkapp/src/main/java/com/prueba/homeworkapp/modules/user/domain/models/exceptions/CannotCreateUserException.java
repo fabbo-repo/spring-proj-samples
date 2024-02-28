@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.user.domain.models.exceptions;
 
-import com.prueba.homeworkapp.commons.exceptions.ApiException;
+import com.prueba.homeworkapp.common.exceptions.ApiException;
 
 public class CannotCreateUserException extends ApiException {
     public CannotCreateUserException(final String email) {

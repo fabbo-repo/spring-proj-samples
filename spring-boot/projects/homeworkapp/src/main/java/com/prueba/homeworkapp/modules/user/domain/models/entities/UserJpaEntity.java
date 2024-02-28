@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.user.domain.models.entities;
 
-import com.prueba.homeworkapp.commons.entities.Auditable;
+import com.prueba.homeworkapp.common.entities.Auditable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

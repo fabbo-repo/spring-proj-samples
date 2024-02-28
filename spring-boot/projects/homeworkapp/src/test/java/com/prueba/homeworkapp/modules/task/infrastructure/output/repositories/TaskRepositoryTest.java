@@ -2,13 +2,12 @@ package com.prueba.homeworkapp.modules.task.infrastructure.output.repositories;
 
 
 import com.prueba.homeworkapp.HomeworkappApplication;
-import com.prueba.homeworkapp.commons.annotations.EnabledIfDocker;
-import com.prueba.homeworkapp.commons.config.ReplaceUnderscoresAndCamelCase;
-import com.prueba.homeworkapp.commons.containers.TestContainersIntegration;
-import com.prueba.homeworkapp.commons.seeders.IntegrationTestingSeeder;
+import com.prueba.homeworkapp.common.annotations.EnabledIfDocker;
+import com.prueba.homeworkapp.common.config.ReplaceUnderscoresAndCamelCase;
+import com.prueba.homeworkapp.common.containers.TestContainersIntegration;
+import com.prueba.homeworkapp.common.seeders.IntegrationTestingSeeder;
 import com.prueba.homeworkapp.modules.task.application.repositories.TaskRepository;
 import com.prueba.homeworkapp.modules.task.infrastructure.output.repositories.jpa.mappers.TaskJpaMapper;
-import com.prueba.homeworkapp.modules.task.infrastructure.output.seeders.TaskIntegrationTestingSeeder;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static com.prueba.homeworkapp.commons.utils.TestDataUtils.randomUuid;
+import static com.prueba.homeworkapp.common.utils.TestDataUtils.randomUuid;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

@@ -1,7 +1,7 @@
 package com.prueba.homeworkapp.modules.task.domain.sevices;
 
-import com.prueba.homeworkapp.commons.exceptions.EntityNotFoundException;
-import com.prueba.homeworkapp.commons.models.ApiPage;
+import com.prueba.homeworkapp.common.exceptions.EntityNotFoundException;
+import com.prueba.homeworkapp.common.models.ApiPage;
 import com.prueba.homeworkapp.modules.task.application.repositories.TaskRepository;
 import com.prueba.homeworkapp.modules.task.application.usecases.CreateTaskUseCase;
 import com.prueba.homeworkapp.modules.task.application.usecases.DeleteTaskUseCase;

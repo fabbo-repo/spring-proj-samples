@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.task.infrastructure.output.repositories.jpa.entities;
 
-import com.prueba.homeworkapp.commons.entities.Auditable;
+import com.prueba.homeworkapp.common.entities.Auditable;
 import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

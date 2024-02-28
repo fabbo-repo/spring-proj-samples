@@ -2,8 +2,8 @@ package com.prueba.homeworkapp.modules.user.domain.services;
 
 import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.jose.shaded.gson.JsonParser;
-import com.prueba.homeworkapp.commons.clients.keycloak.KeycloakAdminClient;
-import com.prueba.homeworkapp.commons.exceptions.EntityNotFoundException;
+import com.prueba.homeworkapp.common.clients.keycloak.KeycloakAdminClient;
+import com.prueba.homeworkapp.common.exceptions.EntityNotFoundException;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 import com.prueba.homeworkapp.modules.user.domain.models.mappers.UserMapper;

@@ -1,7 +1,7 @@
 package com.prueba.homeworkapp.modules.task.infrastructure.input.rest.data.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.prueba.homeworkapp.commons.config.TimeZoneConfig;
+import com.prueba.homeworkapp.common.config.TimeZoneConfig;
 import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

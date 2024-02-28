@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.user.infrastructure.output.seeders;
 
-import com.prueba.homeworkapp.commons.clients.AuthAdminClient;
+import com.prueba.homeworkapp.common.clients.AuthAdminClient;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 import com.prueba.homeworkapp.modules.user.infrastructure.output.repositories.jpa.UserJpaRepository;
 import lombok.RequiredArgsConstructor;

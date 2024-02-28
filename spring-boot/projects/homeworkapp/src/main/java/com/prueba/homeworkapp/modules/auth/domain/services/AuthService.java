@@ -1,7 +1,7 @@
 package com.prueba.homeworkapp.modules.auth.domain.services;
 
-import com.prueba.homeworkapp.commons.clients.AuthAdminClient;
-import com.prueba.homeworkapp.commons.clients.AuthClient;
+import com.prueba.homeworkapp.common.clients.AuthAdminClient;
+import com.prueba.homeworkapp.common.clients.AuthClient;
 import com.prueba.homeworkapp.modules.auth.application.usecases.AccessUseCase;
 import com.prueba.homeworkapp.modules.auth.application.usecases.LogoutUseCase;
 import com.prueba.homeworkapp.modules.auth.application.usecases.RefreshUseCase;

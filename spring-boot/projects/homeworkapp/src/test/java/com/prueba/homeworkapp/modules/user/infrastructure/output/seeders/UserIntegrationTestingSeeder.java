@@ -1,7 +1,7 @@
 package com.prueba.homeworkapp.modules.user.infrastructure.output.seeders;
 
 import com.prueba.homeworkapp.HomeworkappApplication;
-import com.prueba.homeworkapp.commons.config.KeycloakConfig;
+import com.prueba.homeworkapp.common.config.KeycloakConfig;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 import com.prueba.homeworkapp.modules.user.infrastructure.output.repositories.jpa.UserJpaRepository;
 import com.prueba.homeworkapp.modules.user.infrastructure.output.repositories.jpa.entities.UserJpaEntityFactory;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.prueba.homeworkapp.commons.utils.TestDataUtils.randomText;
+import static com.prueba.homeworkapp.common.utils.TestDataUtils.randomText;
 
 @RequiredArgsConstructor
 @Profile(HomeworkappApplication.INT_TEST_PROFILE)

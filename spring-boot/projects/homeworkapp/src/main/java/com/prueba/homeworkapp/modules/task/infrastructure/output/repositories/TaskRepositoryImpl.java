@@ -1,7 +1,7 @@
 package com.prueba.homeworkapp.modules.task.infrastructure.output.repositories;
 
-import com.prueba.homeworkapp.commons.mapper.ApiPageMapper;
-import com.prueba.homeworkapp.commons.models.ApiPage;
+import com.prueba.homeworkapp.common.mapper.ApiPageMapper;
+import com.prueba.homeworkapp.common.models.ApiPage;
 import com.prueba.homeworkapp.modules.task.application.repositories.TaskRepository;
 import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 import com.prueba.homeworkapp.modules.task.domain.models.Task;

@@ -2,7 +2,7 @@ package com.prueba.homeworkapp.modules.auth.infrastructure.input.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prueba.homeworkapp.HomeworkappApplication;
-import com.prueba.homeworkapp.commons.config.ReplaceUnderscoresAndCamelCase;
+import com.prueba.homeworkapp.common.config.ReplaceUnderscoresAndCamelCase;
 import com.prueba.homeworkapp.modules.auth.domain.exceptions.UnauthorizedException;
 import com.prueba.homeworkapp.modules.auth.domain.services.AuthService;
 import com.prueba.homeworkapp.modules.auth.infrastructure.input.rest.data.mappers.AccessRestMapper;
@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static com.prueba.homeworkapp.commons.utils.TestDataUtils.randomText;
+import static com.prueba.homeworkapp.common.utils.TestDataUtils.randomText;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

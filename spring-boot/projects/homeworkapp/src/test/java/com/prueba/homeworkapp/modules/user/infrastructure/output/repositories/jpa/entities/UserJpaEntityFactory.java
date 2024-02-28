@@ -4,10 +4,10 @@ import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import static com.prueba.homeworkapp.commons.utils.TestDataUtils.randomEmail;
-import static com.prueba.homeworkapp.commons.utils.TestDataUtils.randomInt;
-import static com.prueba.homeworkapp.commons.utils.TestDataUtils.randomText;
-import static com.prueba.homeworkapp.commons.utils.TestDataUtils.randomUuid;
+import static com.prueba.homeworkapp.common.utils.TestDataUtils.randomEmail;
+import static com.prueba.homeworkapp.common.utils.TestDataUtils.randomInt;
+import static com.prueba.homeworkapp.common.utils.TestDataUtils.randomText;
+import static com.prueba.homeworkapp.common.utils.TestDataUtils.randomUuid;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserJpaEntityFactory {
