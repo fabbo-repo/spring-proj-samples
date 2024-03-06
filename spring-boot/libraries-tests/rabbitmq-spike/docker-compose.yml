@@ -2,14 +2,13 @@ version: '3'
 services:
   rabbitmq:
     container_name: rabbitmq
+    hostname: 'rabbitmq'
     build:
       context: rabbitmq
       dockerfile: Dockerfile
     environment:
       - RABBITMQ_DEFAULT_USER=user
       - RABBITMQ_DEFAULT_PASS=password
-      - KEYCLOAK_URL=https://localhost:39080
-      - KEYCLOAK_REALM=homeworkapp
     volumes:
       - rabbitmq-volume:/var/lib/rabbitmq
     ports:

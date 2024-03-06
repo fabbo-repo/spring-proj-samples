@@ -1,11 +1,9 @@
 package com.spike.rabbitmqspike.services;
 
 import com.spike.rabbitmqspike.config.RabbitMQConfig;
-import com.spike.rabbitmqspike.models.dtos.ChatGroup;
 import com.spike.rabbitmqspike.models.dtos.ChatMessage;
+import com.spike.rabbitmqspike.models.dtos.ChatToken;
 import com.spike.rabbitmqspike.models.dtos.ChatUser;
-import com.spike.rabbitmqspike.models.exceptions.ChatGroupNotFoundException;
-import jakarta.annotation.PostConstruct;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -13,128 +11,98 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @Service
 public class ChatService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    private static final Logger log = Logger.getLogger(ChatService.class.toString());
+
+    private static final String CHAT_QUEUE_PREFIX = "q.chat.";
+
     private final List<ChatMessage> chatMessageList = new ArrayList<>();
+
+    private final List<ChatToken> chatTokenList = new ArrayList<>();
 
     private final List<ChatUser> connectedUserList = new ArrayList<>();
 
-    private final List<ChatGroup> chatGroupList = new ArrayList<>();
-
-    @PostConstruct
-    void setup() {
-        this.chatGroupList.add(
-                new ChatGroup(
-                        UUID.fromString("3fa85f65-5717-4562-b3fc-2c967f66afa6"),
-                        "Grupo 1",
-                        new ArrayList<>()
-                )
-        );
-        this.chatGroupList.add(
-                new ChatGroup(
-                        UUID.fromString("3fa95f65-5717-4563-b3fc-2c967f66afa7"),
-                        "Grupo 2",
-                        new ArrayList<>()
-                )
-        );
-    }
-
-    public ChatGroup join(
-            final ChatUser joiningUser,
-            final UUID chatGroupId
+    private ChatToken getOrRegenerateChatToken(
+            final UUID fromUser,
+            final UUID toUser
     ) {
-        // Add user as connected user
-        connectedUserList.add(joiningUser);
-
-        // Save user inside chatGroup
-        final ChatGroup chatGroup = chatGroupList
-                .stream()
-                .filter(
-                        group -> group
-                                .getId()
-                                .equals(chatGroupId)
-                )
-                .findFirst()
-                .orElseThrow(
-                        ChatGroupNotFoundException::new
-                );
-        final ChatMessage chatMessage = new ChatMessage(
-                chatMessageList.size() + 1,
-                joiningUser.getId(),
-                null,
-                chatGroup.getId(),
-                joiningUser.getUsername() + " has joined :)"
-        );
-        sendPublicMessage(chatMessage);
-        return chatGroup;
-    }
-
-    public ChatGroup leave(
-            final ChatUser leavingUser,
-            final UUID chatGroupId
-    ) {
-
-        final ChatGroup chatGroup = chatGroupList
-                .stream()
-                .filter(
-                        group -> group
-                                .getId()
-                                .equals(chatGroupId)
-                )
-                .findFirst()
-                .orElseThrow(
-                        ChatGroupNotFoundException::new
-                );
-        final ChatMessage chatMessage = new ChatMessage(
-                chatMessageList.size() + 1,
-                leavingUser.getId(),
-                null,
-                chatGroupId,
-                leavingUser.getUsername() + " has left :("
-        );
-
-        sendPublicMessage(chatMessage);
-
-        chatGroup
-                .getChatUsers()
-                .removeIf(
-                        chatUser -> chatUser
-                                .getId()
-                                .equals(leavingUser.getId())
-                );
-
-        connectedUserList.removeIf(
-                chatUser -> chatUser
-                        .getId()
-                        .equals(leavingUser.getId())
-        );
-        rabbitTemplate.convertAndSend(
-                "/topic/connected.users",
-                connectedUserList.size()
-        );
-        return chatGroup;
-    }
-
-    public void sendPublicMessage(final ChatMessage chatMessage) {
-        rabbitTemplate.convertAndSend(
-                "topic/" + chatMessage.getToGroup() + "public.messages",
-                chatMessage
-        );
-        chatMessageList.add(chatMessage);
-    }
-
-    public void sendPrivateMessage(final ChatMessage chatMessage) {
         final RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate);
+        final String chatId = fromUser + "-" + toUser;
+        return chatTokenList
+                .stream()
+                .filter(
+                        storedChatToken ->
+                                storedChatToken.getId()
+                                               .equals(chatId)
+                )
+                .findAny()
+                .map(
+                        storedChatToken -> {
+                            if (storedChatToken.getEndValid().isBefore(
+                                    LocalDateTime.now()
+                            )) {
+                                log.info(
+                                        "Queue " + CHAT_QUEUE_PREFIX + storedChatToken.getToken()
+                                        + " is no longer valid"
+                                );
+                                rabbitAdmin.deleteQueue(CHAT_QUEUE_PREFIX + storedChatToken.getToken());
+                                chatTokenList.removeIf(
+                                        chatListToken ->
+                                                chatListToken.getId()
+                                                             .equals(
+                                                                     storedChatToken.getId()
+                                                             )
+                                );
+                                final ChatToken newChatToken = new ChatToken(
+                                        chatId,
+                                        generateToken(),
+                                        LocalDateTime.now().plusMinutes(5)
+                                );
+                                chatTokenList.add(newChatToken);
+                                return newChatToken;
+                            }
+                            return storedChatToken;
+                        }
+                )
+                .orElseGet(
+                        () -> {
+                            final ChatToken newChatToken = new ChatToken(
+                                    chatId,
+                                    generateToken(),
+                                    LocalDateTime.now().plusMinutes(5)
+                            );
+                            chatTokenList.add(newChatToken);
+                            return newChatToken;
+                        }
+                );
+    }
+
+    public ChatToken getChatToken(
+            final UUID fromUser,
+            final UUID toUser
+    ) {
+        final RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate);
+
+        final ChatToken chatToken = getOrRegenerateChatToken(
+                fromUser,
+                toUser
+        );
+
         rabbitAdmin.declareQueue(
                 new Queue(
-                        "q." + chatMessage.getToUser().toString(),
+                        CHAT_QUEUE_PREFIX + chatToken.getToken(),
                         false,
                         false,
                         true
@@ -142,7 +110,42 @@ public class ChatService {
         );
         rabbitAdmin.declareBinding(
                 new Binding(
-                        "q." + chatMessage.getToUser().toString(),
+                        CHAT_QUEUE_PREFIX + chatToken.getToken(),
+                        Binding.DestinationType.QUEUE,
+                        RabbitMQConfig.PRIVATE_CHAT_EXCHANGE,
+                        toUser.toString(),
+                        null
+                )
+        );
+        return chatToken;
+    }
+
+    public void sendMessage(final ChatMessage chatMessage) {
+        final RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate);
+
+        connectedUserList.add(
+                new ChatUser(
+                        chatMessage.getFromUser(),
+                        "test"
+                )
+        );
+
+        final ChatToken chatToken = getOrRegenerateChatToken(
+                chatMessage.getFromUser(),
+                chatMessage.getToUser()
+        );
+
+        rabbitAdmin.declareQueue(
+                new Queue(
+                        CHAT_QUEUE_PREFIX + chatToken.getToken(),
+                        false,
+                        false,
+                        true
+                )
+        );
+        rabbitAdmin.declareBinding(
+                new Binding(
+                        CHAT_QUEUE_PREFIX + chatToken.getToken(),
                         Binding.DestinationType.QUEUE,
                         RabbitMQConfig.PRIVATE_CHAT_EXCHANGE,
                         chatMessage.getToUser().toString(),
@@ -152,54 +155,33 @@ public class ChatService {
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.PRIVATE_CHAT_EXCHANGE,
                 chatMessage.getToUser().toString(),
-                chatMessage.toString()
+                chatMessage.toJson()
         );
         chatMessageList.add(chatMessage);
     }
 
-    public List<ChatGroup> listChatGroups() {
-        return chatGroupList;
-    }
-
     public List<ChatMessage> listChatMessages(
-            final UUID userId,
-            final UUID chatGroupId
+            final UUID userId
     ) {
         return chatMessageList
                 .stream()
                 .filter(
                         chatMessage ->
-                                chatGroupId.equals(chatMessage.getToGroup())
-                                && chatGroupList.stream().anyMatch(
-                                        chatGroup -> chatGroup.getId().equals(chatGroupId)
-                                                     && chatGroup.getChatUsers().stream().anyMatch(
-                                                chatUser -> chatUser.getId().equals(userId)
-                                        )
-                                )
+                                chatMessage.getToUser()
+                                           .equals(userId)
                 ).toList();
     }
 
-    public List<ChatUser> listConnectedUsers(final UUID chatGroupId) {
-        return connectedUserList
-                .stream()
-                .filter(
-                        chatUser ->
-                                chatGroupList
-                                        .stream()
-                                        .anyMatch(chatGroup ->
-                                                          chatGroup
-                                                                  .getId()
-                                                                  .equals(chatGroupId)
-                                                          && chatGroup
-                                                                  .getChatUsers()
-                                                                  .stream()
-                                                                  .anyMatch(
-                                                                          groupUser -> groupUser
-                                                                                  .getId()
-                                                                                  .equals(chatUser.getId())
-                                                                  )
-                                        )
-                )
-                .toList();
+    public List<ChatUser> listConnectedUsers() {
+        return connectedUserList;
+    }
+
+    private String generateToken() {
+        final SecureRandom secureRandom = new SecureRandom();
+        final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
+
+        final byte[] randomBytes = new byte[44];
+        secureRandom.nextBytes(randomBytes);
+        return base64Encoder.encodeToString(randomBytes);
     }
 }
