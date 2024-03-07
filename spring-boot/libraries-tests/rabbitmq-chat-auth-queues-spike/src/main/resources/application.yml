@@ -1,0 +1,13 @@
+spring:
+  config:
+    import: optional:file:api.env[.properties]
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: password
