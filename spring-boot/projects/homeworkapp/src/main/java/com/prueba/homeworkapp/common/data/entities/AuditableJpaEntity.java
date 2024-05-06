@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public abstract class Auditable<U> {
+public abstract class AuditableJpaEntity {
     public static final String CREATED_AT_COL = "created_at";
     private static final String CREATED_BY_COL = "created_by";
     private static final String UPDATED_AT_COL = "updated_at";
@@ -29,7 +29,7 @@ public abstract class Auditable<U> {
 
     @CreatedBy
     @Column(name = CREATED_BY_COL)
-    protected U createdBy;
+    protected String createdBy;
 
 
     @LastModifiedDate
@@ -38,5 +38,5 @@ public abstract class Auditable<U> {
 
     @LastModifiedBy
     @Column(name = UPDATED_BY_COL)
-    private U updatedBy;
+    private String updatedBy;
 }

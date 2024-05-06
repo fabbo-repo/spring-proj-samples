@@ -1,4 +1,4 @@
-package com.copeo.copeoapi.common.data.exceptions;
+package com.prueba.homeworkapp.common.data.exceptions;
 
 public class ApiPageNotFoundException extends RuntimeException {
     public ApiPageNotFoundException(final int pageNum) {

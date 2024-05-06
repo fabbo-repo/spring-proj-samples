@@ -1,20 +1,15 @@
-package com.prueba.homeworkapp.modules.task.domain.props;
+package com.prueba.homeworkapp.common.data.props;
 
-import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor
-public class FilerTasksProps {
-    private TaskStatusEnum taskStatus;
-
+public class ApiPageProps {
     private int pageNum;
 
     private int pageSize;

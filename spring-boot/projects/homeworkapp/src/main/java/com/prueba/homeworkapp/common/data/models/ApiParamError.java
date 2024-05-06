@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record ParamError(
+public record ApiParamError(
         String field,
         String message
 ) implements Serializable {

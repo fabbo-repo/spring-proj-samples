@@ -3,7 +3,7 @@ package com.prueba.homeworkapp.modules.user.domain.services;
 import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.jose.shaded.gson.JsonParser;
 import com.prueba.homeworkapp.common.clients.keycloak.KeycloakAdminClient;
-import com.prueba.homeworkapp.common.exceptions.EntityNotFoundException;
+import com.prueba.homeworkapp.common.data.exceptions.ApiResourceNotFoundException;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 import com.prueba.homeworkapp.modules.user.domain.models.mappers.UserMapper;
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         final UserJpaEntity userJpaEntity = userRepository
                 .findById(id)
                 .orElseThrow(
-                        () -> new EntityNotFoundException(
+                        () -> new ApiResourceNotFoundException(
                                 UserJpaEntity.TABLE_NAME,
                                 UserJpaEntity.ID_COL,
                                 id.toString()
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
         final UserJpaEntity dbUser = userRepository
                 .findById(user.getId())
                 .orElseThrow(
-                        () -> new EntityNotFoundException(
+                        () -> new ApiResourceNotFoundException(
                                 UserJpaEntity.TABLE_NAME,
                                 UserJpaEntity.ID_COL,
                                 user.getId().toString()

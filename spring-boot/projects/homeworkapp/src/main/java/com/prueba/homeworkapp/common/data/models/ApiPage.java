@@ -1,19 +1,23 @@
-package com.prueba.homeworkapp.common.models;
+package com.prueba.homeworkapp.common.data.models;
 
 import java.util.List;
 import java.util.function.Function;
 
 public record ApiPage<T>(
-        long count,
-        String next,
-        String previous,
+        long totalElements,
+        int pageSize,
+        long pageIndex,
+        long firstPage,
+        long lastPage,
         List<T> results
 ) {
     public <U> ApiPage<U> map(Function<T, U> converter) {
         return new ApiPage<>(
-                count,
-                next,
-                previous,
+                totalElements,
+                pageSize,
+                pageIndex,
+                firstPage,
+                lastPage,
                 results.stream().map(converter).toList()
         );
     }

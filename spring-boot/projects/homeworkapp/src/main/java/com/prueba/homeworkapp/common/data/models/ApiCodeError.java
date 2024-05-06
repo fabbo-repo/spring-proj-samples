@@ -7,8 +7,9 @@ import java.util.List;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record ApiError(
+public record ApiCodeError(
+        Integer errorCode,
         String message,
-        List<ParamError> params
+        List<ApiParamError> params
 ) {
 }

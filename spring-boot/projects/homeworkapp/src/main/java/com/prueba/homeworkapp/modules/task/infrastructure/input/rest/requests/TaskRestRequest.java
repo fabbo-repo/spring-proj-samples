@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.task.infrastructure.input.rest.data.requests;
+package com.prueba.homeworkapp.modules.task.infrastructure.input.rest.requests;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.prueba.homeworkapp.common.config.TimeZoneConfig;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class TaskRequest {
+public class TaskRestRequest {
         @NotBlank
         @Size(min = 3, max = 30)
         private String title;
@@ -35,7 +35,8 @@ public class TaskRequest {
         @JsonFormat(pattern = TimeZoneConfig.DATE_ISO_FORMAT)
         private LocalDateTime finishedAt;
 
-        private boolean finished;
+        @NotNull
+        private Boolean finished;
 
         @NotNull
         private TaskStatusEnum taskStatus;

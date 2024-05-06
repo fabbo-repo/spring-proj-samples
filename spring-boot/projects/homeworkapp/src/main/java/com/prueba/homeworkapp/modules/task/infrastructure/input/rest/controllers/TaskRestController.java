@@ -1,22 +1,27 @@
-package com.prueba.homeworkapp.modules.task.infrastructure.input.rest;
+package com.prueba.homeworkapp.modules.task.infrastructure.input.rest.controllers;
 
 import com.prueba.homeworkapp.common.data.models.ApiPage;
+import com.prueba.homeworkapp.common.data.props.ApiPageProps;
 import com.prueba.homeworkapp.modules.task.application.usecases.CreateTaskUseCase;
 import com.prueba.homeworkapp.modules.task.application.usecases.DeleteTaskUseCase;
 import com.prueba.homeworkapp.modules.task.application.usecases.FilterTasksUseCase;
 import com.prueba.homeworkapp.modules.task.application.usecases.GetTaskUseCase;
 import com.prueba.homeworkapp.modules.task.application.usecases.GetTasksUseCase;
 import com.prueba.homeworkapp.modules.task.application.usecases.UpdateTaskUseCase;
-import com.prueba.homeworkapp.modules.task.domain.dtos.UpdateTaskDto;
 import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 import com.prueba.homeworkapp.modules.task.domain.models.Task;
-import com.prueba.homeworkapp.modules.task.infrastructure.input.rest.data.mappers.TaskRestMapper;
-import com.prueba.homeworkapp.modules.task.infrastructure.input.rest.data.requests.TaskRequest;
-import com.prueba.homeworkapp.modules.task.infrastructure.input.rest.data.responses.TaskResponse;
+import com.prueba.homeworkapp.modules.task.domain.props.CreateTaskProps;
+import com.prueba.homeworkapp.modules.task.domain.props.FilerTasksProps;
+import com.prueba.homeworkapp.modules.task.domain.props.UpdateTaskProps;
+import com.prueba.homeworkapp.modules.task.infrastructure.input.rest.mappers.TaskRestMapper;
+import com.prueba.homeworkapp.modules.task.infrastructure.input.rest.requests.TaskRestRequest;
+import com.prueba.homeworkapp.modules.task.infrastructure.input.rest.responses.TaskRestResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,9 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -40,6 +43,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TaskRestController {
     public static final String SWAGGER_TAG = "Task API";
+
+    @Value("${api.pagination.page-size}")
+    private int pageSize;
 
     @SuppressWarnings("squid:S1075")
     public static final String CONTROLLER_PATH = "/task";
@@ -67,7 +73,7 @@ public class TaskRestController {
     private final DeleteTaskUseCase deleteTaskUseCase;
 
     @GetMapping(GET_TASK_SUB_PATH)
-    public ResponseEntity<TaskResponse> getTask(@PathVariable final UUID id) {
+    public ResponseEntity<TaskRestResponse> getTask(@PathVariable final UUID id) {
         final Task task = getTaskUseCase.getTask(id);
         return ResponseEntity.ok(
                 TASK_REST_MAPPER.taskToTaskResponse(task)
@@ -75,38 +81,53 @@ public class TaskRestController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiPage<TaskResponse>> getTasks(
-            @RequestParam(defaultValue = "0") @Min(0) final Integer page
+    public ResponseEntity<ApiPage<TaskRestResponse>> getTasks(
+            @RequestParam(defaultValue = "0") @Min(0) final Integer pageNum
     ) {
-        final ApiPage<Task> taskPage = getTasksUseCase.getTasks(page);
+        final ApiPage<Task> taskPage = getTasksUseCase.getTasks(
+            new ApiPageProps(
+                    pageNum,
+                    pageSize
+            )
+        );
         return ResponseEntity.ok(
                 taskPage.map(TASK_REST_MAPPER::taskToTaskResponse)
         );
     }
 
     @GetMapping(GET_TASK_BY_TASK_STATUS_SUB_PATH)
-    public ResponseEntity<ApiPage<TaskResponse>> getTasksByTaskStatus(
+    public ResponseEntity<ApiPage<TaskRestResponse>> getTasksByTaskStatus(
             @PathVariable final TaskStatusEnum status,
-            @RequestParam(defaultValue = "0") @Min(0) final Integer page
+            @RequestParam(defaultValue = "0") @Min(0) final Integer pageNum
     ) {
         final ApiPage<Task> taskPage = filterTasksUseCase
-                .filterTasks(status, page);
+                .filterTasks(
+                        new FilerTasksProps(
+                                pageNum,
+                                pageSize,
+                                status
+                        )
+                );
         return ResponseEntity.ok(
                 taskPage.map(TASK_REST_MAPPER::taskToTaskResponse)
         );
     }
 
     @PostMapping
-    public ResponseEntity<TaskResponse> createTask(@RequestBody @Valid final TaskRequest request) {
+    public ResponseEntity<TaskRestResponse> createTask(
+            @RequestBody @Valid final TaskRestRequest request
+    ) {
         final Task newTask = createTaskUseCase.createTask(
-                TASK_REST_MAPPER.taskRequestToTask(request)
+                new CreateTaskProps(
+                        request.getTitle(),
+                        request.getDescription(),
+                        request.getEstimatedDoneAt(),
+                        request.getFinishedAt(),
+                        request.getFinished()
+                )
         );
-        final URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path(GET_TASK_SUB_PATH)
-                .buildAndExpand(newTask.getId())
-                .toUri();
         return ResponseEntity
-                .created(location)
+                .status(HttpStatus.CREATED)
                 .body(
                         TASK_REST_MAPPER.taskToTaskResponse(newTask)
                 );
@@ -120,9 +141,10 @@ public class TaskRestController {
 
     @PutMapping(PUT_MARK_AS_FINISHED_SUB_PATH)
     public ResponseEntity<Void> updateTaskAsFinished(@PathVariable final UUID id) {
-        final UpdateTaskDto updateTaskDto = new UpdateTaskDto();
-        updateTaskDto.setId(id);
-        updateTaskDto.setFinished(true);
+        final UpdateTaskProps updateTaskDto = new UpdateTaskProps(
+                id,
+                true
+        );
         updateTaskUseCase.updateTask(updateTaskDto);
         return ResponseEntity.noContent().build();
     }
