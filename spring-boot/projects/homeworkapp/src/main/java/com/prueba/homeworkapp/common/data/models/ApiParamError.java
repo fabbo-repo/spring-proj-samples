@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.common.models;
+package com.prueba.homeworkapp.common.data.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

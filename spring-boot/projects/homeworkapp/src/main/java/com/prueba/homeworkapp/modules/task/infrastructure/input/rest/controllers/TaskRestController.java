@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.task.infrastructure.input.rest;
 
-import com.prueba.homeworkapp.common.models.ApiPage;
+import com.prueba.homeworkapp.common.data.models.ApiPage;
 import com.prueba.homeworkapp.modules.task.application.usecases.CreateTaskUseCase;
 import com.prueba.homeworkapp.modules.task.application.usecases.DeleteTaskUseCase;
 import com.prueba.homeworkapp.modules.task.application.usecases.FilterTasksUseCase;

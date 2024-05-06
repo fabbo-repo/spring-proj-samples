@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.common.entities;
+package com.prueba.homeworkapp.common.data.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
