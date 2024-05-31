@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.task.infrastructure.output.repositories.jpa.entities;
 
-import com.prueba.homeworkapp.common.entities.Auditable;
+import com.prueba.homeworkapp.common.data.entities.AuditableJpaEntity;
 import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +26,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = TaskJpaEntity.TABLE_NAME)
-public class TaskJpaEntity extends Auditable<String> {
+public class TaskJpaEntity extends AuditableJpaEntity {
     public static final String TABLE_NAME = "task";
 
     public static final String SORT_FIELD = "createdAt";

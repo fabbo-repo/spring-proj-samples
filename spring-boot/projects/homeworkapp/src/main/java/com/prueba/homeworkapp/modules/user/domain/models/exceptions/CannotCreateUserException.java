@@ -1,9 +1,9 @@
 package com.prueba.homeworkapp.modules.user.domain.models.exceptions;
 
-import com.prueba.homeworkapp.common.exceptions.ApiException;
+import com.prueba.homeworkapp.common.data.exceptions.ApiCodeException;
 
-public class CannotCreateUserException extends ApiException {
+public class CannotCreateUserException extends ApiCodeException {
     public CannotCreateUserException(final String email) {
-        super(String.format("Cannot create user with email %s", email));
+        super(11, String.format("Cannot create user with email %s", email));
     }
 }

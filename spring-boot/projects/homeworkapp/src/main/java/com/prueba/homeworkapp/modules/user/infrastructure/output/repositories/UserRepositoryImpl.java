@@ -1,7 +1,7 @@
 package com.prueba.homeworkapp.modules.user.infrastructure.output.repositories;
 
-import com.prueba.homeworkapp.common.mapper.ApiPageMapper;
-import com.prueba.homeworkapp.common.models.ApiPage;
+import com.prueba.homeworkapp.common.data.mapper.ApiPageMapper;
+import com.prueba.homeworkapp.common.data.models.ApiPage;
 import com.prueba.homeworkapp.modules.user.domain.models.dtos.User;
 import com.prueba.homeworkapp.modules.user.domain.models.entities.UserJpaEntity;
 import com.prueba.homeworkapp.modules.user.domain.models.mappers.UserMapper;

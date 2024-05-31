@@ -1,13 +1,14 @@
 package com.prueba.homeworkapp.common.handlers;
 
-import com.prueba.homeworkapp.common.exceptions.ApiException;
-import com.prueba.homeworkapp.common.exceptions.EntityNotFoundException;
-import com.prueba.homeworkapp.common.exceptions.PageNotFoundException;
-import com.prueba.homeworkapp.common.models.ApiError;
-import com.prueba.homeworkapp.common.models.ParamError;
+import com.prueba.homeworkapp.common.data.exceptions.ApiCodeException;
+import com.prueba.homeworkapp.common.data.exceptions.ApiPageNotFoundException;
+import com.prueba.homeworkapp.common.data.exceptions.ApiResourceNotFoundException;
+import com.prueba.homeworkapp.common.data.models.ApiCodeError;
+import com.prueba.homeworkapp.common.data.models.ApiParamError;
 import com.prueba.homeworkapp.modules.auth.domain.exceptions.UnauthorizedException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -29,9 +30,11 @@ import java.util.List;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleGenericException(final Exception ex) {
+    public ResponseEntity<ApiCodeError> handleGenericException(final Exception ex) {
         logger.error(ex.getClass() + ": " + ex.getMessage());
-        final ApiError errorResponse = ApiError
+        logger.error(ExceptionUtils.getStackTrace(ex));
+
+        final ApiCodeError errorResponse = ApiCodeError
                 .builder()
                 .message("Internal Server Error")
                 .build();
@@ -48,17 +51,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             @NonNull final HttpStatusCode status,
             @NonNull final WebRequest request
     ) {
-        final List<ParamError> paramErrors = new ArrayList<>();
+        final List<ApiParamError> paramErrors = new ArrayList<>();
         for (final FieldError error : ex.getFieldErrors()) {
             paramErrors.add(
-                    ParamError
+                    ApiParamError
                             .builder()
                             .field(error.getField())
                             .message(error.getDefaultMessage())
                             .build()
             );
         }
-        final ApiError response = ApiError
+        final ApiCodeError response = ApiCodeError
                 .builder()
                 .params(paramErrors)
                 .build();
@@ -68,13 +71,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Will get invoke when unauthorized exception is thrown.
      */
-    @ExceptionHandler(
-            {
-                    UnauthorizedException.class
-            }
-    )
-    public ResponseEntity<ApiError> handleUnauthorizedException(final UnauthorizedException ex) {
-        final ApiError errorResponse = ApiError
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiCodeError> handleUnauthorizedException(final UnauthorizedException ex) {
+        final ApiCodeError errorResponse = ApiCodeError
                 .builder()
                 .message(ex.getMessage())
                 .build();
@@ -84,10 +83,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Will get invoke when any API exception is thrown.
      */
-    @ExceptionHandler(ApiException.class)
-    public ResponseEntity<ApiError> handleApiException(final ApiException ex) {
-        final ApiError errorResponse = ApiError
+    @ExceptionHandler(ApiCodeException.class)
+    public ResponseEntity<ApiCodeError> handleApiException(final ApiCodeException ex) {
+        final ApiCodeError errorResponse = ApiCodeError
                 .builder()
+                .errorCode(ex.getCode())
                 .message(ex.getMessage())
                 .build();
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -96,14 +96,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Will get invoke when an NotFoundException is thrown.
      */
-    @ExceptionHandler(
-            {
-                    EntityNotFoundException.class,
-                    PageNotFoundException.class
-            }
-    )
-    public ResponseEntity<ApiError> handleNotFoundException(final RuntimeException ex) {
-        final ApiError errorResponse = ApiError
+    @ExceptionHandler({
+            ApiPageNotFoundException.class,
+            ApiResourceNotFoundException.class
+    })
+    public ResponseEntity<ApiCodeError> handleNotFoundException(final RuntimeException ex) {
+        final ApiCodeError errorResponse = ApiCodeError
                 .builder()
                 .message(ex.getMessage())
                 .build();
@@ -114,10 +112,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      * Will get invoke when invalid path variable is sent in rest request.
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ApiError> handleMethodArgumentTypeMismatchException(
+    public ResponseEntity<ApiCodeError> handleMethodArgumentTypeMismatchException(
             final MethodArgumentTypeMismatchException ex
     ) {
-        final ApiError errorResponse = ApiError
+        final ApiCodeError errorResponse = ApiCodeError
                 .builder()
                 .message(ex.getMessage())
                 .build();
@@ -128,20 +126,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      * Will get invoke when invalid path variable is sent in rest request.
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ApiError> handleConstraintViolationException(
+    public ResponseEntity<ApiCodeError> handleConstraintViolationException(
             final ConstraintViolationException ex
     ) {
-        final List<ParamError> paramErrors = new ArrayList<>();
+        final List<ApiParamError> paramErrors = new ArrayList<>();
         for (final ConstraintViolation<?> error : ex.getConstraintViolations()) {
             paramErrors.add(
-                    ParamError
+                    ApiParamError
                             .builder()
                             .field(error.getPropertyPath().toString().split("\\.")[1])
                             .message(error.getMessage())
                             .build()
             );
         }
-        final ApiError response = ApiError
+        final ApiCodeError response = ApiCodeError
                 .builder()
                 .params(paramErrors)
                 .build();

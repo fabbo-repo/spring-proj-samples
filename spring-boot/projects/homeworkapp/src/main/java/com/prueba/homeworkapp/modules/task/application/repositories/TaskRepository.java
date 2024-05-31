@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.task.application.repositories;
 
-import com.prueba.homeworkapp.common.models.ApiPage;
+import com.prueba.homeworkapp.common.data.models.ApiPage;
 import com.prueba.homeworkapp.modules.task.domain.models.Task;
 import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 
@@ -13,11 +13,12 @@ public interface TaskRepository {
 
     Optional<Task> findById(final UUID id);
 
-    ApiPage<Task> findAll(final int pageNum);
+    ApiPage<Task> findAll(int pageNum, int pageSize);
 
     ApiPage<Task> findAllByTaskStatus(
             final TaskStatusEnum taskStatus,
-            final int pageNum
+            final int pageNum,
+            final int pageSize
     );
 
     void deleteById(final UUID id);
@@ -29,6 +30,7 @@ public interface TaskRepository {
             String description,
             Boolean finished,
             LocalDateTime futureEstimatedDoneAt,
-            int pageNum
+            int pageNum,
+            int pageSize
     );
 }

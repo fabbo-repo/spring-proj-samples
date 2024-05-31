@@ -1,7 +1,7 @@
 package com.prueba.homeworkapp.modules.task.infrastructure.output.repositories;
 
-import com.prueba.homeworkapp.common.mapper.ApiPageMapper;
-import com.prueba.homeworkapp.common.models.ApiPage;
+import com.prueba.homeworkapp.common.data.mapper.ApiPageMapper;
+import com.prueba.homeworkapp.common.data.models.ApiPage;
 import com.prueba.homeworkapp.modules.task.application.repositories.TaskRepository;
 import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 import com.prueba.homeworkapp.modules.task.domain.models.Task;
@@ -13,7 +13,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,9 +33,6 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     private final TaskJpaRepository taskJpaRepository;
 
-    @Value("${api.pagination.page-size}")
-    private int pageSize;
-
     private final ApiPageMapper<TaskJpaEntity> apiPageMapper = new ApiPageMapper<>();
 
     private static final TaskJpaMapper TASK_JPA_MAPPER = TaskJpaMapper.INSTANCE;
@@ -54,7 +50,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public ApiPage<Task> findAll(final int pageNum) {
+    public ApiPage<Task> findAll(final int pageNum, final int pageSize) {
         final Pageable pageable = PageRequest.of(
                 pageNum,
                 pageSize,
@@ -73,7 +69,9 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     public ApiPage<Task> findAllByTaskStatus(
-            final TaskStatusEnum taskStatus, final int pageNum
+            final TaskStatusEnum taskStatus,
+            final int pageNum,
+            final int pageSize
     ) {
         final Pageable pageable = PageRequest.of(
                 pageNum,
@@ -111,7 +109,8 @@ public class TaskRepositoryImpl implements TaskRepository {
             final String description,
             final Boolean finished,
             final LocalDateTime futureEstimatedDoneAt,
-            final int pageNum
+            final int pageNum,
+            final int pageSize
     ) {
         final Specification<TaskJpaEntity> specification = (
                 @NonNull final Root<TaskJpaEntity> root,

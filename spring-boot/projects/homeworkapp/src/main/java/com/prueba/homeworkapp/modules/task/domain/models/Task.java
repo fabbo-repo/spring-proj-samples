@@ -2,6 +2,7 @@ package com.prueba.homeworkapp.modules.task.domain.models;
 
 import com.prueba.homeworkapp.modules.task.domain.enums.TaskStatusEnum;
 import lombok.Getter;
+import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -38,31 +39,31 @@ public class Task {
         setEstimatedDoneAt(estimatedDoneAt);
     }
 
-    public void setId(UUID id) {
+    public void setId(final UUID id) {
         this.id = id;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@NonNull final String title) {
         this.title = title;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
-    public void setEstimatedDoneAt(LocalDateTime estimatedDoneAt) {
+    public void setEstimatedDoneAt(final LocalDateTime estimatedDoneAt) {
         this.estimatedDoneAt = estimatedDoneAt;
     }
 
-    public void setFinishedAt(LocalDateTime finishedAt) {
+    public void setFinishedAt(final LocalDateTime finishedAt) {
         this.finishedAt = finishedAt;
     }
 
-    public void setFinished(boolean finished) {
+    public void setFinished(final boolean finished) {
         this.finished = finished;
     }
 
-    public void setTaskStatus(TaskStatusEnum taskStatus) {
+    public void setTaskStatus(@NonNull final TaskStatusEnum taskStatus) {
         this.taskStatus = taskStatus;
     }
 

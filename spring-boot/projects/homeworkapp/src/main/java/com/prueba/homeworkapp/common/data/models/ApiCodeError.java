@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.common.models;
+package com.prueba.homeworkapp.common.data.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -7,8 +7,9 @@ import java.util.List;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record ApiError(
+public record ApiCodeError(
+        Integer errorCode,
         String message,
-        List<ParamError> params
+        List<ApiParamError> params
 ) {
 }

@@ -1,6 +1,6 @@
 package com.prueba.homeworkapp.modules.user.domain.models.entities;
 
-import com.prueba.homeworkapp.common.entities.Auditable;
+import com.prueba.homeworkapp.common.data.entities.AuditableJpaEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = UserJpaEntity.TABLE_NAME)
-public class UserJpaEntity extends Auditable<String> {
+public class UserJpaEntity extends AuditableJpaEntity {
     public static final String TABLE_NAME = "app_user";
 
     public static final String SORT_FIELD = "createdAt";

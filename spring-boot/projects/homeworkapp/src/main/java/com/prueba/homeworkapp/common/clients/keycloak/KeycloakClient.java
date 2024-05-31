@@ -11,7 +11,7 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.Tokens;
 import com.prueba.homeworkapp.common.clients.AuthClient;
 import com.prueba.homeworkapp.common.config.KeycloakConfig;
-import com.prueba.homeworkapp.common.exceptions.UnexpectedException;
+import com.prueba.homeworkapp.common.data.exceptions.UnexpectedException;
 import com.prueba.homeworkapp.modules.auth.domain.exceptions.UnauthorizedException;
 import com.prueba.homeworkapp.modules.auth.domain.models.Jwts;
 import lombok.RequiredArgsConstructor;

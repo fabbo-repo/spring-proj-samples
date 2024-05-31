@@ -1,4 +1,4 @@
-package com.prueba.homeworkapp.modules.task.infrastructure.input.rest.data.responses;
+package com.prueba.homeworkapp.modules.task.infrastructure.input.rest.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.prueba.homeworkapp.common.config.TimeZoneConfig;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class TaskResponse {
+public class TaskRestResponse {
     private UUID id;
 
     private String title;
