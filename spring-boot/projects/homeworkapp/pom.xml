@@ -39,6 +39,9 @@
 			src/main/java/com/prueba/homeworkapp/modules/**/domain/models/**/*,
 			src/main/java/com/prueba/homeworkapp/HomeworkappApplication.java
 		</sonar.coverage.exclusions>
+		<!-- Build Properties -->
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 	</properties>
 	<dependencies>
 		<!-- Web -->

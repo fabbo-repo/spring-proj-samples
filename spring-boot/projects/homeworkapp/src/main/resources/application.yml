@@ -5,5 +5,9 @@ server:
     context-path: /api/v1
 
 api:
+  build:
+    timestamp: @timestamp@
+  versions:
+    api-version: @project.version@
   pagination:
     page-size: 10

@@ -7,3 +7,6 @@
 (_) (_)`\___/'(_) (_) (_)`\____)`\___x___/'`\___/'(_)   (_) (_)(_) (_)| ,__/'| ,__/'
                                                                       | |    | |
                                                                       (_)    (_)
+
+    Version: ${api.versions.api-version}
+    Build Timestamp: ${api.build.timestamp}
