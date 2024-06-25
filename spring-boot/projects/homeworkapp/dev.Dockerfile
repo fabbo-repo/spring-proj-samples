@@ -16,6 +16,8 @@ FROM docker.io/eclipse-temurin:17-jdk-alpine
 ENV TZ=UTC
 ENV SPRING_PROFILES_ACTIVE=dev
 
+VOLUME /tmp
+
 WORKDIR /app
 COPY --from=build /app/target/homeworkapp.jar /app
 
